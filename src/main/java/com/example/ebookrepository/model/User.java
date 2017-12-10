@@ -1,6 +1,9 @@
 package com.example.ebookrepository.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import javax.persistence.*;
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -26,9 +29,9 @@ public class User {
     private String type;
 
     @OneToMany(mappedBy = "user")
-    private List<Ebook> ebooks;
+    private List<Ebook> ebooks = new ArrayList<>();
 
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "category_id")
     private Category category;
 
@@ -36,15 +39,12 @@ public class User {
     }
 
     public User(String firstName, String lastName,
-                String username, String password,
-                String type, List<Ebook> ebooks, Category category) {
+                String username, String password, String type) {
         this.firstName = firstName;
         this.lastName = lastName;
         this.username = username;
         this.password = password;
         this.type = type;
-        this.ebooks = ebooks;
-        this.category = category;
     }
 
     public int getId() {
@@ -95,6 +95,7 @@ public class User {
         this.type = type;
     }
 
+    @JsonIgnore
     public List<Ebook> getEbooks() {
         return ebooks;
     }
@@ -109,5 +110,9 @@ public class User {
 
     public void setCategory(Category category) {
         this.category = category;
+    }
+
+    public void addBook(Ebook ebook){
+        this.ebooks.add(ebook);
     }
 }

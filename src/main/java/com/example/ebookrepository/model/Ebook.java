@@ -27,30 +27,24 @@ public class Ebook {
     @Column(length = 100)
     private String mimeType;
 
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "language_id", nullable = false)
     private Language language;
 
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "category_id", nullable = false)
     private Category category;
 
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
 
     public Ebook() {
     }
 
-    public Ebook(String title, String author, String keywords,
-                 int publicationYear, String fileName, String mimeType,
-                 Language language, Category category, User user) {
+    public Ebook(String title, String fileName, Language language, Category category, User user) {
         this.title = title;
-        this.author = author;
-        this.keywords = keywords;
-        this.publicationYear = publicationYear;
         this.fileName = fileName;
-        this.mimeType = mimeType;
         this.language = language;
         this.category = category;
         this.user = user;
