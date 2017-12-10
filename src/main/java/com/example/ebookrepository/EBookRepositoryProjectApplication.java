@@ -34,6 +34,6 @@ public class EBookRepositoryProjectApplication implements CommandLineRunner {
 
         Ebook ebook = new Ebook("Tajtl", "fajl.pdf", language, category, user);
 
-        ebookService.addEditEbook(ebook);
+//        ebookService.addEditEbook(ebook);
     }
 }
