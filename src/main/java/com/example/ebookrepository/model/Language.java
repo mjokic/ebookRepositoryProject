@@ -16,6 +16,9 @@ public class Language {
     @OneToMany(mappedBy = "language")
     private List<Ebook> ebooks;
 
+    public Language() {
+    }
+
     public Language(String name, List<Ebook> ebooks) {
         this.name = name;
         this.ebooks = ebooks;

@@ -32,6 +32,9 @@ public class User {
     @JoinColumn(name = "category_id")
     private Category category;
 
+    public User() {
+    }
+
     public User(String firstName, String lastName,
                 String username, String password,
                 String type, List<Ebook> ebooks, Category category) {

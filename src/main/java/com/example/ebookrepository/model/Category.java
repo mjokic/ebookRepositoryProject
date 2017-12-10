@@ -19,6 +19,9 @@ public class Category {
     @OneToMany(mappedBy = "category")
     private List<User> users;
 
+    public Category() {
+    }
+
     public Category(String name, List<Ebook> ebooks, List<User> users) {
         this.name = name;
         this.ebooks = ebooks;
