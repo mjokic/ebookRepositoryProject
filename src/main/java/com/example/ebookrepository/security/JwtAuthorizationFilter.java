@@ -1,8 +1,12 @@
 package com.example.ebookrepository.security;
 
+import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.JwtParser;
 import io.jsonwebtoken.Jwts;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
 
@@ -12,6 +16,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 public class JwtAuthorizationFilter extends BasicAuthenticationFilter {
 
@@ -38,14 +44,19 @@ public class JwtAuthorizationFilter extends BasicAuthenticationFilter {
     }
 
     private UsernamePasswordAuthenticationToken getAuthentication(String token) {
-        String userStr = Jwts.parser()
-                .setSigningKey(Constants.SECRET.getBytes())
+        JwtParser parser = Jwts.parser().setSigningKey(Constants.SECRET.getBytes());
+
+        Claims claims = parser
                 .parseClaimsJws(token.replace(Constants.TOKEN_PREFIX, ""))
-                .getBody()
-                .getSubject();
+                .getBody();
+
+        String userStr = claims.getSubject();
+
+        GrantedAuthority role = new SimpleGrantedAuthority(claims.get("role").toString());
+        List<GrantedAuthority> authorities = new ArrayList<>(Collections.singletonList(role));
 
         if (userStr != null) {
-            return new UsernamePasswordAuthenticationToken(userStr, null, new ArrayList<>());
+            return new UsernamePasswordAuthenticationToken(userStr, null, authorities);
         }
 
         return null;

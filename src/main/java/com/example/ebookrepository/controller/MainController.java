@@ -19,23 +19,23 @@ public class MainController {
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
 
     @Autowired
-    public MainController(UserService userService, BCryptPasswordEncoder bCryptPasswordEncoder){
+    public MainController(UserService userService, BCryptPasswordEncoder bCryptPasswordEncoder) {
         this.userService = userService;
         this.bCryptPasswordEncoder = bCryptPasswordEncoder;
     }
 
     @RequestMapping(path = "/", method = RequestMethod.GET)
-    public String index(){
+    public String index() {
         return "Hey";
     }
 
     @RequestMapping(path = "/panel", method = RequestMethod.GET)
-    public String panel(){
+    public String panel() {
         return "Hidden message";
     }
 
     @RequestMapping(path = "/register", method = RequestMethod.PUT, consumes = "application/json")
-    public ResponseEntity<Status> register(@RequestBody User user){
+    public ResponseEntity<Status> register(@RequestBody User user) {
         user.setType("pretplatnik");
         user.setPassword(bCryptPasswordEncoder.encode(user.getPassword()));
         userService.addEditUser(user);
