@@ -8,6 +8,14 @@
     <title>eBook Repository</title>
 </head>
 
+<script>
+    var token = localStorage.getItem("token");
+
+    if (token){
+        window.location.replace("/panel.html");
+    }
+</script>
+
 <nav class="navbar navbar-default navbar-fixed-top" role="navigation">
 
     <div class="container-fluid">

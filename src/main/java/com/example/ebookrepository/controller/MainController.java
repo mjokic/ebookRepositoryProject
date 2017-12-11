@@ -25,8 +25,8 @@ public class MainController {
     }
 
 
-    @RequestMapping(path = "/panel", method = RequestMethod.GET)
-    public String panel() {
+    @RequestMapping(path = "/hidden", method = RequestMethod.POST)
+    public String hidden() {
         return "Hidden message";
     }
 

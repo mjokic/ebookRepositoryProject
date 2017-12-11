@@ -22,18 +22,17 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http.csrf().disable().authorizeRequests()
-                .antMatchers("/favicon.ico",
-                        "/css/**",
-                        "/img/**",
-                        "/js/**").permitAll()
                 .antMatchers("/register").permitAll()
                 .antMatchers("/").permitAll()
-                .antMatchers("/panel").hasAuthority("administrator")
+//                .antMatchers("/panel").hasAuthority("administrator")
                 .anyRequest().authenticated()
                 .and()
                 .addFilter(new JwtAuthenticationFilter(authenticationManager()))
                 .addFilter(new JwtAuthorizationFilter(authenticationManager()))
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
+
+        http.authorizeRequests().antMatchers("/resources/**").permitAll()
+                .anyRequest().permitAll();
     }
 
 

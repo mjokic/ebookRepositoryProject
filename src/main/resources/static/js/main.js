@@ -36,7 +36,9 @@ $('#login-form').submit(function (e) {
         contentType: "application/json",
         success: function (data, textStatus, request) {
             var token = request.getResponseHeader("Authorization");
-            alert("Login Successful! " + token);
+            localStorage.setItem("token", token);
+
+            window.location.replace("/panel.html")
         },
         error: function (err) {
             var json = err.responseJSON;
