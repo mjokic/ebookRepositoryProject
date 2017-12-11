@@ -24,10 +24,6 @@ public class MainController {
         this.bCryptPasswordEncoder = bCryptPasswordEncoder;
     }
 
-    @RequestMapping(path = "/", method = RequestMethod.GET)
-    public String index() {
-        return "Hey";
-    }
 
     @RequestMapping(path = "/panel", method = RequestMethod.GET)
     public String panel() {
