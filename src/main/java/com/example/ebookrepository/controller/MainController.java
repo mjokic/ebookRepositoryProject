@@ -30,12 +30,12 @@ public class MainController {
         return "Hidden message";
     }
 
-    @RequestMapping(path = "/register", method = RequestMethod.PUT, consumes = "application/json")
+    @RequestMapping(path = "/register", method = RequestMethod.POST, consumes = "application/json")
     public ResponseEntity<Status> register(@RequestBody User user) {
         user.setType("pretplatnik");
         user.setPassword(bCryptPasswordEncoder.encode(user.getPassword()));
         userService.addEditUser(user);
-        Status status = new Status("success", "Registration Successful!");
+        Status status = new Status(true, "Registration Successful!");
         return new ResponseEntity<>(status, HttpStatus.OK);
     }
 

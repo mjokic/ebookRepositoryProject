@@ -11,8 +11,8 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 public class ErrorHandler {
 
     @ExceptionHandler(DataIntegrityViolationException.class)
-    public ResponseEntity<Status> catchErrors(DataIntegrityViolationException ex){
-        Status status = new Status("fail", ex.getMostSpecificCause().getMessage());
+    public ResponseEntity<Status> catchErrors(DataIntegrityViolationException ex) {
+        Status status = new Status(false, ex.getMostSpecificCause().getMessage());
         return new ResponseEntity<>(status, HttpStatus.BAD_REQUEST);
     }
 

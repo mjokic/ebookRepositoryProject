@@ -2,20 +2,20 @@ package com.example.ebookrepository.model;
 
 public class Status {
 
-    private String status;
+    private boolean success;
     private String message;
 
-    public Status(String status, String message) {
-        this.status = status;
+    public Status(boolean success, String message) {
+        this.success = success;
         this.message = message;
     }
 
-    public String getStatus() {
-        return status;
+    public boolean getStatus() {
+        return success;
     }
 
-    public void setStatus(String status) {
-        this.status = status;
+    public void setStatus(boolean success) {
+        this.success = success;
     }
 
     public String getMessage() {
