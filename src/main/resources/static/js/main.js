@@ -18,6 +18,7 @@ $(function () {
 
     var token = localStorage.getItem("token");
     if (token){
+        $('#me').show();
         $('#logout').show();
     }
 
@@ -44,7 +45,7 @@ $('#login-form').submit(function (e) {
             var token = request.getResponseHeader("Authorization");
             localStorage.setItem("token", token);
 
-            window.location.replace("/categories.html")
+            window.location.replace("/books.html")
         },
         error: function (err) {
             var json = err.responseJSON;
