@@ -26,6 +26,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         http.csrf().disable().authorizeRequests()
                 .antMatchers("/", "/register").permitAll()
                 .antMatchers(HttpMethod.GET, "/category").permitAll()
+                .antMatchers(HttpMethod.GET, "/ebook").permitAll()
                 .anyRequest().authenticated()
                 .and()
                 .addFilter(new JwtAuthenticationFilter(authenticationManager()))
