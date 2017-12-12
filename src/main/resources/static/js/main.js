@@ -15,6 +15,12 @@ $(function () {
         e.preventDefault();
     });
 
+
+    var token = localStorage.getItem("token");
+    if (token){
+        $('#logout').show();
+    }
+
 });
 
 
@@ -38,7 +44,7 @@ $('#login-form').submit(function (e) {
             var token = request.getResponseHeader("Authorization");
             localStorage.setItem("token", token);
 
-            window.location.replace("/panel.html")
+            window.location.replace("/categories.html")
         },
         error: function (err) {
             var json = err.responseJSON;
@@ -56,6 +62,12 @@ $('#register-form').submit(function (e) {
     var lastname = $('#lastname').val();
     var username = $('#username-reg').val();
     var password = $('#password-reg').val();
+    var passconf = $('#confirm-password').val();
+
+    if (password !== passconf){
+        alert("Passwords doesn't match!");
+        return;
+    }
 
     var data = {
         "firstName": firstname,
@@ -77,5 +89,13 @@ $('#register-form').submit(function (e) {
             var json = err.responseJSON;
             alert(json.message);
         }
-    })
+    });
+
 });
+
+
+$('#logout').click(function () {
+    localStorage.removeItem("token");
+    window.location.replace("/")
+});
+

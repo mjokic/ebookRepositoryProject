@@ -5,6 +5,7 @@ import com.example.ebookrepository.model.Ebook;
 import com.example.ebookrepository.model.Language;
 import com.example.ebookrepository.model.User;
 import com.example.ebookrepository.service.EbookService;
+import com.example.ebookrepository.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
@@ -18,8 +19,8 @@ public class EBookRepositoryProjectApplication implements CommandLineRunner {
     private final EbookService ebookService;
 
     @Autowired
-    public EBookRepositoryProjectApplication(EbookService ebookService) {
-        this.ebookService = ebookService;
+    public EBookRepositoryProjectApplication(EbookService service) {
+        this.ebookService = service;
     }
 
     public static void main(String[] args) {
@@ -28,8 +29,10 @@ public class EBookRepositoryProjectApplication implements CommandLineRunner {
 
     @Override
     public void run(String... strings) throws Exception {
-        User user = new User("Marko", "Jokic",
-                "mjokic", "p4ss123", "admin");
+        User user = new User("Marko", "Jokic", "m",
+                "$2a$10$uXcHV5fz.y7j6xsXfm7CWOKtrA5eKFANdq5dm7ltHonogzG7PsP0u",
+                "administrator");
+
         Language language = new Language("srpski");
         Category category = new Category("cat1");
         user.setCategory(category);

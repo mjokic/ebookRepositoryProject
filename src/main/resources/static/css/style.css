@@ -88,3 +88,11 @@ body {
     background-color: #53A3CD;
     border-color: #53A3CD;
 }
+
+.glyphicon.glyphicon-log-out {
+    color: #939f9e;
+    font-size: 15px;
+}
+.glyphicon.glyphicon-log-out:hover{
+    color: #555555;
+}
