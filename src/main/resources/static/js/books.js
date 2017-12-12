@@ -1,56 +1,16 @@
 $(function () {
 
-    loadBooks();
+    loadCategories();
 
-    function generatePanel(books) {
-        var category = books[0]['category'];
-
-        var tabela = '<div class="col-lg-4 col-md-6">' +
-            '<div class="panel panel-default">'+
-            '            <!-- Default panel contents -->'+
-            '            <div class="panel-heading">' + category['name'] + '</div>'+
-            '            <div class="panel-body">'+
-            '                <!-- Table -->'+
-            '                <table class="table table-striped">'+
-                                generateTable(books) +
-            '                </table>'+
-            '            </div>'+
-            '        </div>' +
-            '</div>';
-
-
-        $('#main').append(tabela);
-    }
-
-
-    function generateTable(books) {
-        var rows = '';
-
-        books.forEach(function (value) {
-            rows += '' +
-                '                <tr>' +
-                '                    <td class="filterable-cell">'+value.id+'</td>' +
-                '                    <td class="filterable-cell">'+value.title+'</td>' +
-                '                    <td class="filterable-cell">'+value.author+'</td>' +
-                '                    <td class="filterable-cell">'+value.publicationYear+'</td>' +
-                '                </tr>';
+    function loadCategories() {
+        $.ajax({
+            type: "GET",
+            url: "/category",
+            dataType: "json",
+            success: function (data) {
+                generatePanelCategories(data);
+            }
         });
-
-        var myTable = '<table class="table">'+
-            '            <thead>'+
-            '                <tr>'+
-            '                    <th>Id</th>'+
-            '                    <th>Title</th>'+
-            '                    <th>Author</th>'+
-            '                    <th>Year</th>'+
-            '                </tr>'+
-            '            </thead>'+
-            '            <tbody>'+
-                            rows +
-            '            </tbody>'+
-            '        </table>';
-
-        return myTable;
     }
 
     function loadBooks() {
@@ -66,8 +26,8 @@ $(function () {
                })
            }
         });
-
     }
+
 
     function groupBy(collection, property) {
         var i = 0, val, index, values = [], result = [];
@@ -85,4 +45,40 @@ $(function () {
         return result;
     }
 
+
+    function generatePanelCategories(categories) {
+        categories.forEach(function (category) {
+            var categoryId = category['id'];
+            var category_name = category['name'];
+
+            var collapseId = 'collapse' + categoryId;
+
+            var panel = '<div class="panel-group col-lg-4 col-md-6">'+
+                '            <div class="panel panel-default">'+
+                '                <!-- Default panel contents -->'+
+                '                <div id="'+categoryId+'" onclick="onCategoryClick(this.id)" class="panel-heading" data-toggle="collapse" href="#'+collapseId+'">'+
+                '                    <h4 class="panel-title">'+
+                '                        '+ category_name +
+                '                    </h4>'+
+                '                </div>'+
+                '                <div id="'+collapseId+'" class="panel-collapse collapse">'+
+                '                    <div class="panel-body">'+
+                '                        <table class="table table-striped">'+
+                ''+
+                '                        </table>'+
+                '                    </div>'+
+                '                </div>'+
+                '            </div>'+
+                '        </div>';
+
+            $('#main').append(panel);
+
+        })
+    }
+
 });
+
+
+function onCategoryClick(category_id) {
+    alert(category_id);
+}

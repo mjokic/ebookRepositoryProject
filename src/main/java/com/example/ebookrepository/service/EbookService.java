@@ -1,5 +1,6 @@
 package com.example.ebookrepository.service;
 
+import com.example.ebookrepository.model.Category;
 import com.example.ebookrepository.model.Ebook;
 import com.example.ebookrepository.repository.EbookRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,6 +20,10 @@ public class EbookService {
 
     public List<Ebook> getAllEbooks() {
         return (List<Ebook>) ebookRepository.findAll();
+    }
+
+    public List<Ebook> getAllEbooksByCategory(int id){
+        return ebookRepository.findAllByCategoryId(id);
     }
 
     public Ebook getEbookById(int ebookId) {

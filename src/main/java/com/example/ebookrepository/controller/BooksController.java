@@ -51,7 +51,15 @@ public class BooksController {
         return new ResponseEntity<>(new EbookDto(ebook), HttpStatus.OK);
     }
 
+    @GetMapping("/category/{id}")
+    public ResponseEntity<?> getEbooksByCategoryId(@PathVariable int id){
+        List<Ebook> ebooks = ebookService.getAllEbooksByCategory(id);
+        return new ResponseEntity<>(
+                ebooks.stream().map(EbookDto::new).collect(Collectors.toList()),
+                HttpStatus.OK);
+    }
 
+    // fix this
     @PutMapping
     public ResponseEntity<?> addEbook(@RequestBody EbookDto ebook) {
         Ebook e = new Ebook();
