@@ -3,12 +3,12 @@ $(function () {
     loadBooks();
 
     function generatePanel(books) {
-        var category = books[0].categoryName;
+        var category = books[0]['category'];
 
         var tabela = '<div class="col-lg-4 col-md-6">' +
             '<div class="panel panel-default">'+
             '            <!-- Default panel contents -->'+
-            '            <div class="panel-heading">' + category + '</div>'+
+            '            <div class="panel-heading">' + category['name'] + '</div>'+
             '            <div class="panel-body">'+
             '                <!-- Table -->'+
             '                <table class="table table-striped">'+
@@ -59,7 +59,7 @@ $(function () {
            url: "/ebook",
            dataType: "json",
            success: function (data) {
-               var obj = groupBy(data, "categoryName");
+               var obj = groupBy(data, "category");
 
                obj.forEach(function (value) {
                     generatePanel(value)
@@ -70,10 +70,10 @@ $(function () {
     }
 
     function groupBy(collection, property) {
-        var i = 0, val, index,
-            values = [], result = [];
+        var i = 0, val, index, values = [], result = [];
+
         for (; i < collection.length; i++) {
-            val = collection[i][property];
+            val = collection[i][property]["id"];
             index = values.indexOf(val);
             if (index > -1)
                 result[index].push(collection[i]);

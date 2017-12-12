@@ -66,5 +66,8 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
                 .compact();
 
         response.addHeader(Constants.HEADER, Constants.TOKEN_PREFIX + token);
+        if (role.equals("administrator")){
+            response.addHeader("Location", "/admin.html");
+        }
     }
 }

@@ -1,6 +1,8 @@
 package com.example.ebookrepository.dto;
 
+import com.example.ebookrepository.model.Category;
 import com.example.ebookrepository.model.Ebook;
+import com.example.ebookrepository.model.Language;
 
 public class EbookDto {
 
@@ -10,28 +12,23 @@ public class EbookDto {
     private String keywords;
     private int publicationYear;
     private String mimeType;
-//    private int languageId;
-//    private int categoryId;
-//    private int userId;
-    private String languageName;
-    private String categoryName;
-    private String userName;
+    private Language language;
+    private Category category;
+    private int userId;
 
-    public EbookDto(){}
+    public EbookDto() {
+    }
 
-    public EbookDto(Ebook ebook){
+    public EbookDto(Ebook ebook) {
         this.id = ebook.getId();
         this.title = ebook.getTitle();
         this.author = ebook.getAuthor();
         this.keywords = ebook.getKeywords();
         this.publicationYear = ebook.getPublicationYear();
         this.mimeType = ebook.getMimeType();
-//        this.languageId = ebook.getLanguage().getId();
-//        this.categoryId = ebook.getCategory().getId();
-//        this.userId = ebook.getUser().getId();
-        this.languageName = ebook.getLanguage().getName();
-        this.categoryName = ebook.getCategory().getName();
-        this.userName = ebook.getUser().getUsername();
+        this.language = ebook.getLanguage();
+        this.category = ebook.getCategory();
+        this.userId = ebook.getUser().getId();
     }
 
     public int getId() {
@@ -82,52 +79,27 @@ public class EbookDto {
         this.mimeType = mimeType;
     }
 
-//    public int getLanguageId() {
-//        return languageId;
-//    }
-//
-//    public void setLanguageId(int languageId) {
-//        this.languageId = languageId;
-//    }
-//
-//    public int getCategoryId() {
-//        return categoryId;
-//    }
-//
-//    public void setCategoryId(int categoryId) {
-//        this.categoryId = categoryId;
-//    }
-//
-//    public int getUserId() {
-//        return userId;
-//    }
-//
-//    public void setUserId(int userId) {
-//        this.userId = userId;
-//    }
-
-
-    public String getLanguageName() {
-        return languageName;
+    public Language getLanguage() {
+        return language;
     }
 
-    public void setLanguageName(String languageName) {
-        this.languageName = languageName;
+    public void setLanguage(Language language) {
+        this.language = language;
     }
 
-    public String getCategoryName() {
-        return categoryName;
+    public Category getCategory() {
+        return category;
     }
 
-    public void setCategoryName(String categoryName) {
-        this.categoryName = categoryName;
+    public void setCategory(Category category) {
+        this.category = category;
     }
 
-    public String getUserName() {
-        return userName;
+    public int getUserId() {
+        return userId;
     }
 
-    public void setUserName(String userName) {
-        this.userName = userName;
+    public void setUserId(int userId) {
+        this.userId = userId;
     }
 }

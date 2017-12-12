@@ -43,9 +43,15 @@ $('#login-form').submit(function (e) {
         contentType: "application/json",
         success: function (data, textStatus, request) {
             var token = request.getResponseHeader("Authorization");
+            var location = request.getResponseHeader("Location");
+
             localStorage.setItem("token", token);
 
-            window.location.replace("/books.html")
+            if (location){
+                window.location.replace(location);
+            }else {
+                window.location.replace("/books.html")
+            }
         },
         error: function (err) {
             var json = err.responseJSON;
