@@ -4,10 +4,35 @@ $(document).ready(function () {
 
     token = localStorage.getItem('token');
 
-    loadCategories();
+    if (!token){
+        window.location.replace("/books.html");
+    }
+
+    checkPrivs();
 
 });
 
+function checkPrivs() {
+    $.ajax({
+        type: "GET",
+        url: "/user/me",
+        dataType: "json",
+        beforeSend: function(request) {
+            request.setRequestHeader("Authorization", token);
+        },
+        success: function (me) {
+            var type = (me['type']);
+            if (type === 'administrator'){
+                loadCategories();
+            }else {
+                window.location.replace("/books.html");
+            }
+        },
+        error: function () {
+            window.location.replace("/books.html");
+        }
+    });
+}
 
 function generatePanelCategories(categories) {
     categories.forEach(function (category) {
