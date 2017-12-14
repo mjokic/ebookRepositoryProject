@@ -1,4 +1,8 @@
+var token;
+
 $(document).ready(function () {
+
+    token = localStorage.getItem('token');
 
     loadCategories();
 
@@ -46,7 +50,7 @@ function generateTable(category_id, books) {
 
     books.forEach(function (book) {
         rows += '' +
-            '                <tr class="clickable-row">' +
+            '                <tr class="clickable-row" data-toggle="modal" data-target="#myModal">' +
             '                    <td class="filterable-cell">' + book.id + '</td>' +
             '                    <td class="filterable-cell">' + book.title + '</td>' +
             '                    <td class="filterable-cell">' + book.author + '</td>' +
@@ -101,7 +105,55 @@ function loadBooks(category_id) {
     });
 }
 
+
+function loadBook(bookId) {
+    $.ajax({
+        type: "GET",
+        url: "/ebook/" + bookId,
+        dataType: "json",
+        beforeSend: function(request) {
+            request.setRequestHeader("Authorization", token);
+        },
+        success: function (book) {
+
+            $('#ebookId').val(book['id']);
+            $('#ebookTitle').val(book['title']);
+            $('#ebookAuthor').val(book['author']);
+            $('#ebookKeywords').val(book['keywords']);
+            $('#ebookYear').val(book['publicationYear']);
+            // $('#ebookLang').text(book['language']['name']);
+
+        }
+    });
+}
+
 $('body').on('click', 'tr.clickable-row', function() {
-    var ohShit = $(this).children("td.filterable-cell").first().text();
-    alert(ohShit);
+    var ebookId = $(this).children("td.filterable-cell").first().text();
+    loadBook(ebookId);
+});
+
+
+$('#ebook-edit-form').submit(function (e) {
+    e.preventDefault();
+
+    var data = {
+        "id": $('#ebookId').val()
+    };
+
+    $.ajax({
+        type: $(this).attr("method"),
+        url: $(this).attr("action"),
+        data: JSON.stringify(data),
+        contentType: "application/json",
+        beforeSend: function(request) {
+            request.setRequestHeader("Authorization", token);
+        },
+        success: function (response) {
+            alert(response['message']);
+        },
+        error: function (err) {
+            alert(err['message']);
+        }
+    });
+
 });

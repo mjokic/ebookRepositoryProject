@@ -61,6 +61,47 @@
     </div>
     <button class="btn btn-default"><span class="glyphicon glyphicon-plus"></span></button>
 
+    <!-- Modal -->
+    <div id="myModal" class="modal fade" role="dialog">
+        <div class="modal-dialog">
+
+            <!-- Modal content-->
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h4 class="modal-title">Ebook Details</h4>
+                </div>
+
+                <div class="modal-body">
+
+                    <form id="ebook-edit-form" action="/ebook" method="post">
+                        <div class="form-group">
+                            <input type="hidden" id="ebookId">
+                        </div>
+                        <div class="form-group">
+                            <label for="ebookTitle">Title</label>
+                            <input type="text" class="form-control" id="ebookTitle">
+                        </div>
+                        <div class="form-group">
+                            <label for="ebookAuthor">Author</label>
+                            <input type="text" class="form-control" id="ebookAuthor">
+                        </div>
+                        <div class="form-group">
+                            <label for="ebookKeywords">Keywords</label>
+                            <input type="text" class="form-control" id="ebookKeywords">
+                        </div>
+                        <div class="form-group">
+                            <label for="ebookYear">Author</label>
+                            <input type="number" class="form-control" id="ebookYear">
+                        </div>
+                        <!--Language<input id="ebookLang">-->
+                        <button type="submit" class="btn btn-default">Submit</button>
+                    </form>
+                </div>
+            </div>
+
+        </div>
+    </div>
 
 <script src="js/jquery-3.2.1.js"></script>
 <script src="js/bootstrap.js"></script>

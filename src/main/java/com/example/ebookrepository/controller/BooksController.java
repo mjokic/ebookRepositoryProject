@@ -71,7 +71,7 @@ public class BooksController {
                 HttpStatus.OK);
     }
 
-    // fix this
+    // TODO: 12/14/17 Fix adding ebook
     @PutMapping
     public ResponseEntity<?> addEbook(@RequestBody EbookDto ebook) {
         Ebook e = new Ebook();
@@ -93,6 +93,22 @@ public class BooksController {
         ebookService.addEditEbook(e);
         return new ResponseEntity<>(
                 new Status(true, "Ebook added successfully!"),
+                HttpStatus.OK);
+    }
+
+    // TODO: 12/14/17 Edit ebook
+    @PostMapping
+    public ResponseEntity<?> editEbook(@RequestBody EbookDto ebook){
+        Ebook e = new Ebook();
+        e.setId(ebook.getId());
+        e.setTitle(ebook.getTitle());
+        e.setAuthor(ebook.getAuthor());
+        e.setKeywords(ebook.getKeywords());
+        e.setPublicationYear(ebook.getPublicationYear());
+
+        ebookService.addEditEbook(e);
+        return new ResponseEntity<>(
+                new Status(true, "Ebook successfully edited!"),
                 HttpStatus.OK);
     }
 

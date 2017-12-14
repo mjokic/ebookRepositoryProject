@@ -117,7 +117,7 @@ function loadBook(bookId) {
             var downloadable = book['downloadable'];
             if (downloadable){
                 $('#downloadLink').text("Download")
-                    .attr("href", "/ebook/" + bookId + "/download");
+                    .attr("href", "/ebook/" + book['id'] + "/download");
             }
         }
     });
