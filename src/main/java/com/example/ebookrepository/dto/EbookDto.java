@@ -11,6 +11,7 @@ public class EbookDto {
     private String author;
     private String keywords;
     private int publicationYear;
+    private String fileName;
     private String mimeType;
     private Language language;
     private Category category;
@@ -25,6 +26,7 @@ public class EbookDto {
         this.author = ebook.getAuthor();
         this.keywords = ebook.getKeywords();
         this.publicationYear = ebook.getPublicationYear();
+        this.fileName = ebook.getFileName();
         this.mimeType = ebook.getMimeType();
         this.language = ebook.getLanguage();
         this.category = ebook.getCategory();
@@ -69,6 +71,14 @@ public class EbookDto {
 
     public void setPublicationYear(int publicationYear) {
         this.publicationYear = publicationYear;
+    }
+
+    public String getFileName() {
+        return fileName;
+    }
+
+    public void setFileName(String fileName) {
+        this.fileName = fileName;
     }
 
     public String getMimeType() {
