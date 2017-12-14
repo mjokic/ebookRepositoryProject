@@ -1,4 +1,8 @@
+var token;
 $(document).ready(function () {
+
+    token = localStorage.getItem('token');
+
 
     loadCategories();
 
@@ -41,7 +45,7 @@ function generateTable(category_id, books) {
 
     books.forEach(function (book) {
         rows += '' +
-            '                <tr class="clickable-row">' +
+            '                <tr class="clickable-row" data-toggle="modal" data-target="#myModal">' +
             '                    <td class="filterable-cell">' + book.id + '</td>' +
             '                    <td class="filterable-cell">' + book.title + '</td>' +
             '                    <td class="filterable-cell">' + book.author + '</td>' +
@@ -93,7 +97,33 @@ function loadBooks(category_id) {
     });
 }
 
+function loadBook(bookId) {
+    $.ajax({
+        type: "GET",
+        url: "/ebook/" + bookId,
+        dataType: "json",
+        beforeSend: function(request) {
+            request.setRequestHeader("Authorization", token);
+        },
+        success: function (book) {
+
+            $('#ebookTitle').text(book['title']);
+            $('#ebookAuthor').text(book['author']);
+            $('#ebookKeywords').text(book['keywords']);
+            $('#ebookYear').text(book['publicationYear']);
+            $('#ebookMimeType').text(book['mimeType']);
+            $('#ebookLang').text(book['language']['name']);
+
+            var downloadable = book['downloadable'];
+            if (downloadable){
+                $('#downloadLink').text("Download")
+                    .attr("href", "/ebook/" + bookId + "/download");
+            }
+        }
+    });
+}
+
 $('body').on('click', 'tr.clickable-row', function () {
-    var ohShit = $(this).children("td.filterable-cell").first().text();
-    alert(ohShit);
+    var ebookId = $(this).children("td.filterable-cell").first().text();
+    loadBook(ebookId);
 });

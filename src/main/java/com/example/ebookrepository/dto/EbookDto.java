@@ -3,6 +3,7 @@ package com.example.ebookrepository.dto;
 import com.example.ebookrepository.model.Category;
 import com.example.ebookrepository.model.Ebook;
 import com.example.ebookrepository.model.Language;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 public class EbookDto {
 
@@ -11,11 +12,12 @@ public class EbookDto {
     private String author;
     private String keywords;
     private int publicationYear;
-    private String fileName;
     private String mimeType;
     private Language language;
     private Category category;
     private int userId;
+    private String fileName;
+    private boolean downloadable;
 
     public EbookDto() {
     }
@@ -26,11 +28,12 @@ public class EbookDto {
         this.author = ebook.getAuthor();
         this.keywords = ebook.getKeywords();
         this.publicationYear = ebook.getPublicationYear();
-        this.fileName = ebook.getFileName();
         this.mimeType = ebook.getMimeType();
         this.language = ebook.getLanguage();
         this.category = ebook.getCategory();
         this.userId = ebook.getUser().getId();
+        this.fileName = ebook.getFileName();
+        this.downloadable = true;
     }
 
     public int getId() {
@@ -73,14 +76,6 @@ public class EbookDto {
         this.publicationYear = publicationYear;
     }
 
-    public String getFileName() {
-        return fileName;
-    }
-
-    public void setFileName(String fileName) {
-        this.fileName = fileName;
-    }
-
     public String getMimeType() {
         return mimeType;
     }
@@ -111,5 +106,22 @@ public class EbookDto {
 
     public void setUserId(int userId) {
         this.userId = userId;
+    }
+
+    @JsonIgnore
+    public String getFileName() {
+        return fileName;
+    }
+
+    public void setFileName(String fileName) {
+        this.fileName = fileName;
+    }
+
+    public boolean isDownloadable() {
+        return downloadable;
+    }
+
+    public void setDownloadable(boolean downloadable) {
+        this.downloadable = downloadable;
     }
 }

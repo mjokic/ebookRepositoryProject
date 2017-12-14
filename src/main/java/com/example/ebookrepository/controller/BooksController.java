@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.security.Principal;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -46,13 +47,20 @@ public class BooksController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<?> getEbookById(@PathVariable int id) {
+    public ResponseEntity<?> getEbookById(@PathVariable int id, Principal principal) {
+
         Ebook ebook = ebookService.getEbookById(id);
         if (ebook == null) {
             Status status = new Status(false, "Ebook doesn't exist!");
             return new ResponseEntity<>(status, HttpStatus.NOT_FOUND);
         }
-        return new ResponseEntity<>(new EbookDto(ebook), HttpStatus.OK);
+
+        boolean downloadable = isEbookDownloadable(principal, ebook);
+
+        EbookDto ebookDto = new EbookDto(ebook);
+        ebookDto.setDownloadable(downloadable);
+
+        return new ResponseEntity<>(ebookDto, HttpStatus.OK);
     }
 
     @GetMapping("/category/{id}")
@@ -104,6 +112,25 @@ public class BooksController {
                     new Status(false, "Error!"),
                     HttpStatus.BAD_REQUEST);
         }
+    }
+
+
+    private boolean isEbookDownloadable(Principal principal, Ebook ebook){
+        if (principal == null){
+            return false;
+        }
+
+        User user = userService.getUserByUsername(principal.getName());
+        if (user == null){
+            return false;
+        }
+
+        if (user.getCategory() != null &&
+                user.getCategory().getId() != ebook.getCategory().getId()){
+            return false;
+        }
+
+        return true;
     }
 
 }
