@@ -2,14 +2,14 @@ package com.example.ebookrepository.controller;
 
 import com.example.ebookrepository.dto.EbookDto;
 import com.example.ebookrepository.model.*;
-import com.example.ebookrepository.service.CategoryService;
-import com.example.ebookrepository.service.EbookService;
-import com.example.ebookrepository.service.LanguageService;
-import com.example.ebookrepository.service.UserService;
+import com.example.ebookrepository.service.*;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -21,13 +21,17 @@ public class BooksController {
     private final CategoryService categoryService;
     private final LanguageService languageService;
     private final UserService userService;
+    private final StorageService storageService;
 
+    @Autowired
     public BooksController(EbookService service, CategoryService categoryService,
-                           LanguageService languageService, UserService userService) {
+                           LanguageService languageService, UserService userService,
+                           StorageService storageService) {
         this.ebookService = service;
         this.categoryService = categoryService;
         this.languageService = languageService;
         this.userService = userService;
+        this.storageService = storageService;
     }
 
     @GetMapping
@@ -52,7 +56,7 @@ public class BooksController {
     }
 
     @GetMapping("/category/{id}")
-    public ResponseEntity<?> getEbooksByCategoryId(@PathVariable int id){
+    public ResponseEntity<?> getEbooksByCategoryId(@PathVariable int id) {
         List<Ebook> ebooks = ebookService.getAllEbooksByCategory(id);
         return new ResponseEntity<>(
                 ebooks.stream().map(EbookDto::new).collect(Collectors.toList()),
@@ -67,7 +71,7 @@ public class BooksController {
         e.setAuthor(ebook.getAuthor());
         e.setKeywords(ebook.getKeywords());
         e.setPublicationYear(ebook.getPublicationYear());
-        e.setFileName("fajil.pdf");
+        e.setFileName(ebook.getFileName());
         e.setMimeType(ebook.getMimeType());
 
         Category category = categoryService.getCategoryById(2);
@@ -86,15 +90,20 @@ public class BooksController {
 
 
     @PutMapping("/upload")
-    public ResponseEntity<Status> upload() {
-        Status status = new Status(true, "yey");
-        return new ResponseEntity<>(status, HttpStatus.OK);
+    public ResponseEntity<?> upload(@RequestParam("file") MultipartFile file) {
+        return storageService.store(file);
     }
 
-    @GetMapping("/download")
-    public ResponseEntity<Status> download() {
-        Status status = new Status(true, "yey");
-        return new ResponseEntity<>(status, HttpStatus.OK);
+    @GetMapping("/{id}/download")
+    public ResponseEntity<?> download(@PathVariable("id") int id) {
+        Ebook ebook = ebookService.getEbookById(id);
+        try {
+            return storageService.getFile(ebook);
+        } catch (IOException e) {
+            return new ResponseEntity<>(
+                    new Status(false, "Error!"),
+                    HttpStatus.BAD_REQUEST);
+        }
     }
 
 }
