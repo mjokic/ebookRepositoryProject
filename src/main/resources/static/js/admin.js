@@ -4,7 +4,7 @@ $(document).ready(function () {
 
     token = localStorage.getItem('token');
 
-    if (!token){
+    if (!token) {
         window.location.replace("/books.html");
     }
 
@@ -17,14 +17,14 @@ function checkPrivs() {
         type: "GET",
         url: "/user/me",
         dataType: "json",
-        beforeSend: function(request) {
+        beforeSend: function (request) {
             request.setRequestHeader("Authorization", token);
         },
         success: function (me) {
             var type = (me['type']);
-            if (type === 'administrator'){
+            if (type === 'administrator') {
                 loadCategories();
-            }else {
+            } else {
                 window.location.replace("/books.html");
             }
         },
@@ -49,7 +49,7 @@ function generatePanelCategories(categories) {
             '                        ' + category_name +
             '                    </h4>' +
             '                    <div class="pull-right">' +
-            '                       <span class="glyphicon glyphicon-plus-sign"></span>' +
+            '                       <span class="glyphicon glyphicon-plus-sign add-ebook" data-toggle="modal" data-target="#modalAddEbook"></span>' +
             '                       <span class="glyphicon glyphicon-minus-sign"></span> ' +
             '                       <span class="glyphicon glyphicon-edit"></span> ' +
             '                    </div>' +
@@ -75,7 +75,7 @@ function generateTable(category_id, books) {
 
     books.forEach(function (book) {
         rows += '' +
-            '                <tr class="clickable-row" data-toggle="modal" data-target="#myModal">' +
+            '                <tr class="clickable-row" data-toggle="modal" data-target="#modalEditEbook">' +
             '                    <td class="filterable-cell">' + book.id + '</td>' +
             '                    <td class="filterable-cell">' + book.title + '</td>' +
             '                    <td class="filterable-cell">' + book.author + '</td>' +
@@ -136,7 +136,7 @@ function loadBook(bookId) {
         type: "GET",
         url: "/ebook/" + bookId,
         dataType: "json",
-        beforeSend: function(request) {
+        beforeSend: function (request) {
             request.setRequestHeader("Authorization", token);
         },
         success: function (book) {
@@ -152,11 +152,115 @@ function loadBook(bookId) {
     });
 }
 
-$('body').on('click', 'tr.clickable-row', function() {
+function loadLanguages() {
+    $.ajax({
+        type: "GET",
+        url: "/language",
+        dataType: "json",
+        success: function (languages) {
+            languages.forEach(function (language) {
+                console.log(language);
+                $('#ebookLanguage').append('<option langId="' + language['id'] + '">' + language['name'] + '</option>');
+            });
+
+        }
+    });
+}
+
+$('body').on('click', 'tr.clickable-row', function () {
     var ebookId = $(this).children("td.filterable-cell").first().text();
     loadBook(ebookId);
 });
 
+$('body').on('click', 'span.add-ebook', function () {
+    var categoryId = $(this).closest('div.panel-heading').attr('id');
+    $('#ebookCategoryAdd').val(categoryId);
+    loadLanguages();
+});
+
+$('#modalAddEbook').on('hidden.bs.modal', function () {
+    $(this).find("input,select").val('').end();
+    $(this).find("img").attr('src', '');
+});
+
+$('#file-upload-form').submit(function (e) {
+    e.preventDefault();
+
+    $('#upload-indicator').css('display', 'block');
+    $('#upload-indicator').attr('src', 'images/loading.gif');
+
+    var formData = new FormData();
+    formData.append('file', $('#file')[0].files[0]);
+
+    $.ajax({
+        url: $(this).attr("action"),
+        type: 'PUT',
+        data: formData,
+        processData: false,  // tell jQuery not to process the data
+        contentType: false,  // tell jQuery not to set contentType
+        beforeSend: function (request) {
+            request.setRequestHeader("Authorization", token);
+        },
+        success: function (data) {
+            $('#upload-indicator').attr('src', 'images/check_mark.png');
+
+            var filename = data['fileName'];
+            var title = data['title'];
+            var author = data['author'];
+            var keywords = data['keywords'];
+
+            $('#ebookFilenameAdd').val(filename);
+            $('#ebookTitleAdd').val(title);
+            $('#ebookAuthorAdd').val(author);
+            $('#ebookKeywordsAdd').val(keywords);
+
+            $("#ebook-add-form :input").attr("disabled", false);
+        },
+        error: function (err) {
+            $('#upload-indicator').attr('src', 'images/error_mark.png');
+            var json = err.responseJSON;
+            alert(json.message);
+        }
+    });
+
+});
+
+$('#ebook-add-form').submit(function (e) {
+    e.preventDefault();
+
+    var languageId = $('#ebookLanguage').find(":selected").attr('langId');
+    var categoryId = $('#ebookCategoryAdd').val();
+
+    var data = {
+        "title": $('#ebookTitleAdd').val(),
+        "author": $('#ebookAuthorAdd').val(),
+        "keywords": $('#ebookKeywordsAdd').val(),
+        "publicationYear": $('#ebookYearAdd').val(),
+        "mimeType": 'application/pdf',
+        "languageId": languageId,
+        "categoryId": categoryId,
+        "fileName": $('#ebookFilenameAdd').val()
+    };
+
+    $.ajax({
+        url: '/ebook',
+        type: 'PUT',
+        data: JSON.stringify(data),
+        contentType: "application/json",
+        dataType: "json",
+        beforeSend: function (request) {
+            request.setRequestHeader("Authorization", token);
+        },
+        success: function (data) {
+            alert(data['message']);
+        },
+        error: function (err) {
+            var json = err.responseJSON;
+            alert(json['message']);
+        }
+    });
+
+});
 
 $('#ebook-edit-form').submit(function (e) {
     e.preventDefault();
@@ -170,7 +274,7 @@ $('#ebook-edit-form').submit(function (e) {
         url: $(this).attr("action"),
         data: JSON.stringify(data),
         contentType: "application/json",
-        beforeSend: function(request) {
+        beforeSend: function (request) {
             request.setRequestHeader("Authorization", token);
         },
         success: function (response) {

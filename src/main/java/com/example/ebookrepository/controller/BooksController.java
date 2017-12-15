@@ -1,6 +1,7 @@
 package com.example.ebookrepository.controller;
 
 import com.example.ebookrepository.dto.EbookDto;
+import com.example.ebookrepository.dto.EbookDto2;
 import com.example.ebookrepository.model.*;
 import com.example.ebookrepository.service.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -73,24 +74,24 @@ public class BooksController {
 
     // TODO: 12/14/17 Fix adding ebook
     @PutMapping
-    public ResponseEntity<?> addEbook(@RequestBody EbookDto ebook) {
-        Ebook e = new Ebook();
-        e.setTitle(ebook.getTitle());
-        e.setAuthor(ebook.getAuthor());
-        e.setKeywords(ebook.getKeywords());
-        e.setPublicationYear(ebook.getPublicationYear());
-        e.setFileName(ebook.getFileName());
-        e.setMimeType(ebook.getMimeType());
+    public ResponseEntity<?> addEbook(@RequestBody EbookDto2 ebookDto, Principal principal) {
+        Ebook ebook = new Ebook();
+        ebook.setTitle(ebookDto.getTitle());
+        ebook.setAuthor(ebookDto.getAuthor());
+        ebook.setKeywords(ebookDto.getKeywords());
+        ebook.setPublicationYear(ebookDto.getPublicationYear());
+        ebook.setFileName(ebookDto.getFileName());
+        ebook.setMimeType(ebookDto.getMimeType());
 
-        Category category = categoryService.getCategoryById(2);
-        Language language = languageService.getLanguageById(1);
-        User user = userService.getUserById(1);
+        Category category = categoryService.getCategoryById(ebookDto.getCategoryId());
+        Language language = languageService.getLanguageById(ebookDto.getLanguageId());
+        User user = userService.getUserByUsername(principal.getName());
 
-        e.setCategory(category);
-        e.setLanguage(language);
-        e.setUser(user);
+        ebook.setCategory(category);
+        ebook.setLanguage(language);
+        ebook.setUser(user);
 
-        ebookService.addEditEbook(e);
+        ebookService.addEditEbook(ebook);
         return new ResponseEntity<>(
                 new Status(true, "Ebook added successfully!"),
                 HttpStatus.OK);

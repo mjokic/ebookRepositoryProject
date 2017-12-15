@@ -61,8 +61,65 @@
     </div>
     <button class="btn btn-default"><span class="glyphicon glyphicon-plus"></span></button>
 
-    <!-- Modal -->
-    <div id="myModal" class="modal fade" role="dialog">
+    <!-- Modal Edit Ebook -->
+    <div id="modalAddEbook" class="modal fade" role="dialog">
+        <div class="modal-dialog">
+
+            <!-- Modal content-->
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h4 class="modal-title">Add Ebook</h4>
+                </div>
+
+                <div class="modal-body">
+                    <form id="file-upload-form" action="/ebook/upload">
+                        <div class="form-group">
+                            <input type="file" id="file">
+                            <button type="submit" class="btn btn-default btn-xs">Upload</button>
+                            <img id="upload-indicator" class="pull-right" width="25" height="25" onerror="this.style.display='none'">
+                        </div>
+                    </form>
+
+                    <form id="ebook-add-form" action="/ebook" method="post">
+                        <div class="form-group">
+                            <label for="ebookTitle">Title</label>
+                            <input disabled type="text" class="form-control" id="ebookTitleAdd">
+                        </div>
+                        <div class="form-group">
+                            <label for="ebookAuthor">Author</label>
+                            <input disabled type="text" class="form-control" id="ebookAuthorAdd">
+                        </div>
+                        <div class="form-group">
+                            <label for="ebookKeywords">Keywords</label>
+                            <input disabled type="text" class="form-control" id="ebookKeywordsAdd">
+                        </div>
+                        <div class="form-group">
+                            <label for="ebookYear">Publication Year</label>
+                            <input disabled type="number" class="form-control" id="ebookYearAdd">
+                        </div>
+                        <div class="form-group">
+                            <input type="hidden" id="ebookCategoryAdd">
+                            <input type="hidden" id="ebookFilenameAdd">
+                        </div>
+                        <div class="form-group">
+                            <label for="ebookLanguage">Select language:</label>
+                            <select disabled class="form-control" id="ebookLanguage">
+                                <!-- generate dynamically -->
+                            </select>
+                        </div>
+                        <!--Language<input id="ebookLang">-->
+                        <button disabled type="submit" class="btn btn-default">Add</button>
+                    </form>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+
+    <!-- Modal Edit Ebook -->
+    <div id="modalEditEbook" class="modal fade" role="dialog">
         <div class="modal-dialog">
 
             <!-- Modal content-->
@@ -91,7 +148,7 @@
                             <input type="text" class="form-control" id="ebookKeywords">
                         </div>
                         <div class="form-group">
-                            <label for="ebookYear">Author</label>
+                            <label for="ebookYear">Publication Year</label>
                             <input type="number" class="form-control" id="ebookYear">
                         </div>
                         <!--Language<input id="ebookLang">-->
