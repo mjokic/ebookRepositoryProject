@@ -1,5 +1,6 @@
 package com.example.ebookrepository.controller;
 
+import antlr.StringUtils;
 import com.example.ebookrepository.dto.EbookDto;
 import com.example.ebookrepository.dto.EbookDto2;
 import com.example.ebookrepository.model.*;
@@ -75,6 +76,12 @@ public class BooksController {
     // TODO: 12/14/17 Fix adding ebook
     @PutMapping
     public ResponseEntity<?> addEbook(@RequestBody EbookDto2 ebookDto, Principal principal) {
+        if (StringUtils.stripBack(ebookDto.getTitle(), ' ').equals("")){
+            return new ResponseEntity<>(
+                    new Status(false, "Title can't be empty!"),
+                    HttpStatus.BAD_REQUEST);
+        }
+
         Ebook ebook = new Ebook();
         ebook.setTitle(ebookDto.getTitle());
         ebook.setAuthor(ebookDto.getAuthor());

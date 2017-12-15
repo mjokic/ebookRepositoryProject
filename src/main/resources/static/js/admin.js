@@ -181,6 +181,8 @@ $('body').on('click', 'span.add-ebook', function () {
 $('#modalAddEbook').on('hidden.bs.modal', function () {
     $(this).find("input,select").val('').end();
     $(this).find("img").attr('src', '');
+    $(this).find('select').empty();
+    $("#ebook-add-form :input").attr("disabled", true);
 });
 
 $('#file-upload-form').submit(function (e) {
@@ -252,6 +254,7 @@ $('#ebook-add-form').submit(function (e) {
             request.setRequestHeader("Authorization", token);
         },
         success: function (data) {
+            $('#modalAddEbook').modal('toggle');
             alert(data['message']);
         },
         error: function (err) {
