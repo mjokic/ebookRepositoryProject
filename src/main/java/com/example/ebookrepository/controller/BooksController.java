@@ -73,7 +73,6 @@ public class BooksController {
                 HttpStatus.OK);
     }
 
-    // TODO: 12/14/17 Fix adding ebook
     @PutMapping
     public ResponseEntity<?> addEbook(@RequestBody EbookDto2 ebookDto, Principal principal) {
         if (StringUtils.stripBack(ebookDto.getTitle(), ' ').equals("")){
@@ -104,17 +103,22 @@ public class BooksController {
                 HttpStatus.OK);
     }
 
-    // TODO: 12/14/17 Edit ebook
     @PostMapping
-    public ResponseEntity<?> editEbook(@RequestBody EbookDto ebook){
-        Ebook e = new Ebook();
-        e.setId(ebook.getId());
-        e.setTitle(ebook.getTitle());
-        e.setAuthor(ebook.getAuthor());
-        e.setKeywords(ebook.getKeywords());
-        e.setPublicationYear(ebook.getPublicationYear());
+    public ResponseEntity<?> editEbook(@RequestBody EbookDto2 ebookDto){
+        Ebook ebook = ebookService.getEbookById(ebookDto.getId());
+        ebook.setId(ebookDto.getId());
+        ebook.setTitle(ebookDto.getTitle());
+        ebook.setAuthor(ebookDto.getAuthor());
+        ebook.setKeywords(ebookDto.getKeywords());
+        ebook.setPublicationYear(ebookDto.getPublicationYear());
 
-        ebookService.addEditEbook(e);
+        Category category = categoryService.getCategoryById(ebookDto.getCategoryId());
+        Language language = languageService.getLanguageById(ebookDto.getLanguageId());
+
+        ebook.setCategory(category);
+        ebook.setLanguage(language);
+
+        ebookService.addEditEbook(ebook);
         return new ResponseEntity<>(
                 new Status(true, "Ebook successfully edited!"),
                 HttpStatus.OK);

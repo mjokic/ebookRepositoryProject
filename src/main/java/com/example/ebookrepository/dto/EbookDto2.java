@@ -1,10 +1,8 @@
 package com.example.ebookrepository.dto;
 
-import com.example.ebookrepository.model.Category;
-import com.example.ebookrepository.model.Language;
-
 public class EbookDto2 {
 
+    private int id;
     private String title;
     private String author;
     private String keywords;
@@ -15,7 +13,16 @@ public class EbookDto2 {
     private int userId;
     private String fileName;
 
-    public EbookDto2(){}
+    public EbookDto2() {
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
 
     public String getTitle() {
         return title;

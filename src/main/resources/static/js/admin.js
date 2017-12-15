@@ -23,7 +23,7 @@ function checkPrivs() {
         success: function (me) {
             var type = (me['type']);
             if (type === 'administrator') {
-                loadCategories();
+                loadCategories(true, 0);
             } else {
                 window.location.replace("/books.html");
             }
@@ -104,13 +104,39 @@ function onCategoryClick(category_id) {
 }
 
 
-function loadCategories() {
+function loadCategories(generateCats, category) {
     $.ajax({
         type: "GET",
         url: "/category",
         dataType: "json",
-        success: function (data) {
-            generatePanelCategories(data);
+        success: function (categories) {
+            if (generateCats){
+                generatePanelCategories(categories);
+            }else {
+                categories.forEach(function (category) {
+                    // console.log(category);
+                    $('#ebookCategoryEdit').append('<option catId="' + category['id'] + '">' + category['name'] + '</option>');
+                });
+                $('option[catid='+category['id']+']').prop('selected',true);
+            }
+        }
+    });
+}
+
+function loadLanguages(selectElement, l) {
+    $.ajax({
+        type: "GET",
+        url: "/language",
+        dataType: "json",
+        success: function (languages) {
+            languages.forEach(function (language) {
+                // console.log(language);
+                selectElement.append('<option langId="' + language['id'] + '">' + language['name'] + '</option>');
+            });
+
+            if (l){
+                $('option[langid='+l['id']+']').prop('selected',true);
+            }
         }
     });
 }
@@ -130,7 +156,6 @@ function loadBooks(category_id) {
     });
 }
 
-
 function loadBook(bookId) {
     $.ajax({
         type: "GET",
@@ -141,31 +166,18 @@ function loadBook(bookId) {
         },
         success: function (book) {
 
-            $('#ebookId').val(book['id']);
-            $('#ebookTitle').val(book['title']);
-            $('#ebookAuthor').val(book['author']);
-            $('#ebookKeywords').val(book['keywords']);
-            $('#ebookYear').val(book['publicationYear']);
-            // $('#ebookLang').text(book['language']['name']);
+            $('#ebookIdEdit').val(book['id']);
+            $('#ebookTitleEdit').val(book['title']);
+            $('#ebookAuthorEdit').val(book['author']);
+            $('#ebookKeywordsEdit').val(book['keywords']);
+            $('#ebookYearEdit').val(book['publicationYear']);
 
+            loadLanguages($('#ebookLanguageEdit'), book['language']);
+            loadCategories(false, book['category']);
         }
     });
 }
 
-function loadLanguages() {
-    $.ajax({
-        type: "GET",
-        url: "/language",
-        dataType: "json",
-        success: function (languages) {
-            languages.forEach(function (language) {
-                console.log(language);
-                $('#ebookLanguage').append('<option langId="' + language['id'] + '">' + language['name'] + '</option>');
-            });
-
-        }
-    });
-}
 
 $('body').on('click', 'tr.clickable-row', function () {
     var ebookId = $(this).children("td.filterable-cell").first().text();
@@ -175,14 +187,20 @@ $('body').on('click', 'tr.clickable-row', function () {
 $('body').on('click', 'span.add-ebook', function () {
     var categoryId = $(this).closest('div.panel-heading').attr('id');
     $('#ebookCategoryAdd').val(categoryId);
-    loadLanguages();
+    loadLanguages($('#ebookLanguage'), null);
 });
+
 
 $('#modalAddEbook').on('hidden.bs.modal', function () {
     $(this).find("input,select").val('').end();
     $(this).find("img").attr('src', '');
     $(this).find('select').empty();
     $("#ebook-add-form :input").attr("disabled", true);
+});
+
+$('#modalEditEbook').on('hidden.bs.modal', function () {
+    $(this).find("input,select").val('').end();
+    $(this).find('select').empty();
 });
 
 $('#file-upload-form').submit(function (e) {
@@ -268,8 +286,18 @@ $('#ebook-add-form').submit(function (e) {
 $('#ebook-edit-form').submit(function (e) {
     e.preventDefault();
 
+    var languageId = $('#ebookLanguageEdit').find(":selected").attr('langid');
+    var categoryId = $('#ebookCategoryEdit').find(":selected").attr("catId");
+
     var data = {
-        "id": $('#ebookId').val()
+        "id": $('#ebookIdEdit').val(),
+        "title": $('#ebookTitleEdit').val(),
+        "author": $('#ebookAuthorEdit').val(),
+        "keywords": $('#ebookKeywordsEdit').val(),
+        "publicationYear": $('#ebookYearEdit').val(),
+        "languageId": languageId,
+        "categoryId": categoryId,
+        "mimeType": "application/pdf"
     };
 
     $.ajax({
@@ -281,10 +309,12 @@ $('#ebook-edit-form').submit(function (e) {
             request.setRequestHeader("Authorization", token);
         },
         success: function (response) {
+            $('#modalEditEbook').modal('toggle');
             alert(response['message']);
         },
         error: function (err) {
-            alert(err['message']);
+            var json = err.responseJSON;
+            alert(json['message']);
         }
     });
 
