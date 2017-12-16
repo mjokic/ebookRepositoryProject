@@ -1,5 +1,6 @@
 package com.example.ebookrepository;
 
+import com.example.ebookrepository.lucene.Indexer;
 import com.example.ebookrepository.model.Category;
 import com.example.ebookrepository.model.Ebook;
 import com.example.ebookrepository.model.Language;
@@ -43,24 +44,26 @@ public class EBookRepositoryProjectApplication implements CommandLineRunner {
         User user = new User("Marko", "Jokic", "m",
                 "$2a$10$uXcHV5fz.y7j6xsXfm7CWOKtrA5eKFANdq5dm7ltHonogzG7PsP0u",
                 "administrator");
-        userService.addEditUser(user);
+//        userService.addEditUser(user);
 
         Language language1 = new Language("english");
         Language language2 = new Language("serbian");
         Language language3 = new Language("french");
 
-        languageService.addEditLanguage(language1);
-        languageService.addEditLanguage(language2);
-        languageService.addEditLanguage(language3);
+//        languageService.addEditLanguage(language1);
+//        languageService.addEditLanguage(language2);
+//        languageService.addEditLanguage(language3);
 
 
         Category category1 = new Category("cat1");
         Category category2 = new Category("cat2");
         Category category3 = new Category("cat3");
 
-        categoryService.addEditCategory(category1);
-        categoryService.addEditCategory(category2);
-        categoryService.addEditCategory(category3);
+//        categoryService.addEditCategory(category1);
+//        categoryService.addEditCategory(category2);
+//        categoryService.addEditCategory(category3);
+
+//        Indexer.index();
     }
 
     @Bean

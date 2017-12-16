@@ -3,6 +3,7 @@ package com.example.ebookrepository.controller;
 import antlr.StringUtils;
 import com.example.ebookrepository.dto.EbookDto;
 import com.example.ebookrepository.dto.EbookDto2;
+import com.example.ebookrepository.lucene.Indexer;
 import com.example.ebookrepository.model.*;
 import com.example.ebookrepository.service.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,6 +12,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.websocket.server.PathParam;
 import java.io.IOException;
 import java.security.Principal;
 import java.util.List;
@@ -74,7 +76,7 @@ public class BooksController {
     }
 
     @PutMapping
-    public ResponseEntity<?> addEbook(@RequestBody EbookDto2 ebookDto, Principal principal) {
+    public ResponseEntity<?> addEbook(@RequestBody EbookDto2 ebookDto, Principal principal) throws IOException {
         if (StringUtils.stripBack(ebookDto.getTitle(), ' ').equals("")){
             return new ResponseEntity<>(
                     new Status(false, "Title can't be empty!"),
@@ -98,6 +100,9 @@ public class BooksController {
         ebook.setUser(user);
 
         ebookService.addEditEbook(ebook);
+
+        Indexer.addFileToIndex(ebook);
+
         return new ResponseEntity<>(
                 new Status(true, "Ebook added successfully!"),
                 HttpStatus.OK);
@@ -124,6 +129,12 @@ public class BooksController {
                 HttpStatus.OK);
     }
 
+    // TODO: 12/16/17 Finish deleting ebook
+    @DeleteMapping("/{id}")
+    public void deleteEbook(@PathVariable("id") int id) throws IOException {
+        // when deleting a book remove it from lucene index
+        Indexer.deleteFileFromIndex(id);
+    }
 
     @PutMapping("/upload")
     public ResponseEntity<?> upload(@RequestParam("file") MultipartFile file) {
