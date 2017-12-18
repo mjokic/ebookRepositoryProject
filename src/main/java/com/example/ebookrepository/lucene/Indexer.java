@@ -45,6 +45,7 @@ public class Indexer {
             document.add(new TextField("title", ebook.getTitle(), Field.Store.YES));
             document.add(new TextField("author", ebook.getAuthor(), Field.Store.YES));
             document.add(new TextField("content", content, Field.Store.YES));
+            document.add(new TextField("keywords", ebook.getKeywords(), Field.Store.YES));
             document.add(new TextField("languageId",
                     String.valueOf(ebook.getLanguage().getId()), Field.Store.YES));
 

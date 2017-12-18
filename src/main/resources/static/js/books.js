@@ -127,3 +127,61 @@ $('body').on('click', 'tr.clickable-row', function () {
     var ebookId = $(this).children("td.filterable-cell").first().text();
     loadBook(ebookId);
 });
+
+
+$('#search_form').submit(function (e) {
+    e.preventDefault();
+
+    var title = $('#title').val();
+    var titleCb = $('#titleCb').prop('checked');
+
+    var author = $('#author').val();
+    var authorCb = $('#authorCb').prop('checked');
+
+    var keywords = $('#keywords').val();
+    var keywordsCb = $('#keywordsCb').prop('checked');
+
+    var content = $('#content').val();
+    var contentCb = $('#contentCb').prop('checked');
+
+    var language = $('#language').val();
+    var languageCb = $('#languageCb').prop('checked');
+
+    var data = {
+        "title": {
+            "value": title,
+            "searchType": titleCb
+        },
+        "author": {
+            "value": author,
+            "searchType": authorCb
+        },
+        "keywords": {
+            "value": keywords,
+            "searchType": keywordsCb
+        },
+        "content": {
+            "value": content,
+            "searchType": contentCb
+        },
+        "language": {
+            "value": language,
+            "searchType": languageCb
+        }
+    };
+
+    $.ajax({
+        type: $(this).attr("method"),
+        url: $(this).attr("action"),
+        data: JSON.stringify(data),
+        contentType: "application/json",
+        success: function (response) {
+           alert("jej");
+        },
+        error: function (err) {
+            var json = err.responseJSON;
+            alert(json['message']);
+        }
+    });
+
+});

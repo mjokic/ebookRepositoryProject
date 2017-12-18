@@ -24,10 +24,14 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http.csrf().disable().authorizeRequests()
-                .antMatchers("/", "/register", "/user/me").permitAll()
-                .antMatchers(HttpMethod.GET, "/category/**", "/language/**").permitAll()
-                .antMatchers(HttpMethod.GET, "/ebook/**").permitAll()
-                .antMatchers(HttpMethod.GET, "/search/**").permitAll()
+                .antMatchers("/",
+                        "/register",
+                        "/user/me",
+                        "/search/**").permitAll()
+                .antMatchers(HttpMethod.GET,
+                        "/category/**",
+                        "/language/**",
+                        "/ebook/**").permitAll()
                 .anyRequest().authenticated()
                 .and()
                 .addFilter(new JwtAuthenticationFilter(authenticationManager()))
