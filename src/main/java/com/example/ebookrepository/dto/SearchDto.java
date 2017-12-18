@@ -13,7 +13,7 @@ public class SearchDto {
     public SearchDto(){}
 
     public Title getTitle() {
-        if (title.searchType){
+        if (!title.searchType){
             title.occur = BooleanClause.Occur.MUST;
         }else {
             title.occur = BooleanClause.Occur.SHOULD;
@@ -26,7 +26,7 @@ public class SearchDto {
     }
 
     public Author getAuthor() {
-        if (author.searchType){
+        if (!author.searchType){
             author.occur = BooleanClause.Occur.MUST;
         }else {
             author.occur = BooleanClause.Occur.SHOULD;
@@ -39,7 +39,7 @@ public class SearchDto {
     }
 
     public Keywords getKeywords() {
-        if (keywords.searchType){
+        if (!keywords.searchType){
             keywords.occur = BooleanClause.Occur.MUST;
         }else {
             keywords.occur = BooleanClause.Occur.SHOULD;
@@ -52,7 +52,7 @@ public class SearchDto {
     }
 
     public Content getContent() {
-        if (content.searchType){
+        if (!content.searchType){
             content.occur = BooleanClause.Occur.MUST;
         }else {
             content.occur = BooleanClause.Occur.SHOULD;
@@ -65,7 +65,7 @@ public class SearchDto {
     }
 
     public Language getLanguage() {
-        if (language.searchType){
+        if (!language.searchType){
             language.occur = BooleanClause.Occur.MUST;
         }else {
             language.occur = BooleanClause.Occur.SHOULD;
