@@ -1,5 +1,7 @@
 package com.example.ebookrepository.lucene;
 
+import com.example.ebookrepository.model.Ebook;
+import com.example.ebookrepository.service.EbookService;
 import org.apache.lucene.document.Document;
 import org.apache.lucene.index.DirectoryReader;
 import org.apache.lucene.search.IndexSearcher;
@@ -10,18 +12,24 @@ import org.apache.lucene.store.Directory;
 import org.apache.lucene.store.SimpleFSDirectory;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 import static com.example.ebookrepository.lucene.Constants.luceneDir;
 
 public class ResultRetriever {
 
     private TopScoreDocCollector collector;
+    private final EbookService ebookService;
 
-    public ResultRetriever() {
+    public ResultRetriever(EbookService ebookService) {
         collector = TopScoreDocCollector.create(10);
+        this.ebookService = ebookService;
     }
 
-    public void printSearchResults(Query query) {
+    public List<Ebook> printSearchResults(Query query) {
+        List<Ebook> ebooks = new ArrayList<>();
+
         try {
             Directory fsDir = new SimpleFSDirectory(luceneDir);
             DirectoryReader reader = DirectoryReader.open(fsDir);
@@ -34,11 +42,14 @@ public class ResultRetriever {
             for (int i = 0; i < collector.getTotalHits(); i++) {
                 int docId = hits[i].doc;
                 Document doc = is.doc(docId);
-                System.out.println("\t" + doc.get("title"));
+                ebooks.add(ebookService.getEbookById(Integer.valueOf(doc.get("id"))));
             }
+
         } catch (IOException ioe) {
             System.out.println(ioe.getMessage());
         }
+
+        return ebooks;
     }
 
 }

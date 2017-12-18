@@ -40,6 +40,37 @@ function generatePanelCategories(categories) {
 }
 
 
+
+function generatePanelCategoriesForSearch(categories) {
+    categories.forEach(function (category) {
+        var categoryId = category['id'];
+        var category_name = category['name'];
+
+        var collapseId = 'collapse' + categoryId;
+
+        var panel = '<div class="panel-group col-lg-4 col-md-6">' +
+            '            <div id="pan' + categoryId + '" class="panel panel-default">' +
+            '                <!-- Default panel contents -->' +
+            '                <div id="' + categoryId + '" class="panel-heading clearfix" data-toggle="collapse" href="#' + collapseId + '">' +
+            '                    <h4 class="panel-title pull-left">' +
+            '                        ' + category_name +
+            '                    </h4>' +
+            '                </div>' +
+            '                <div id="' + collapseId + '" class="panel-collapse collapse">' +
+            '                    <div class="panel-body">' +
+            '                        <table id="table' + categoryId + '" class="table table-striped">' +
+            '' +
+            '                        </table>' +
+            '                    </div>' +
+            '                </div>' +
+            '            </div>' +
+            '        </div>';
+
+        $('#main').append(panel);
+
+    })
+}
+
 function generateTable(category_id, books) {
     var rows = '';
 
@@ -176,7 +207,19 @@ $('#search_form').submit(function (e) {
         data: JSON.stringify(data),
         contentType: "application/json",
         success: function (response) {
-           alert("jej");
+            $('.panel-group').remove(); // removing old results
+
+            var categories = extract_categories(response);
+            generatePanelCategoriesForSearch(categories);
+
+            var lista = groupBy(response);
+
+            lista.forEach(function (books) {
+                var category_id = books[0]['category']['id'];
+                var myTable = generateTable(category_id, books);
+                $('#table' + category_id).replaceWith(myTable);
+            })
+
         },
         error: function (err) {
             var json = err.responseJSON;
@@ -185,3 +228,36 @@ $('#search_form').submit(function (e) {
     });
 
 });
+
+function extract_categories(ebooks) {
+    var categories = {};
+
+    ebooks.forEach(function (ebook) {
+        var category = ebook['category'];
+        categories[category['id']] = category;
+    });
+
+
+    var result = [];
+    for (var key in categories) {
+        result.push(categories[key]);
+    }
+
+    return result;
+}
+
+function groupBy(collection) {
+    var i = 0, val, index, values = [], result = [];
+
+    for (; i < collection.length; i++) {
+        val = collection[i]['category']['id'];
+        index = values.indexOf(val);
+        if (index > -1)
+            result[index].push(collection[i]);
+        else {
+            values.push(val);
+            result.push([collection[i]]);
+        }
+    }
+    return result;
+}
