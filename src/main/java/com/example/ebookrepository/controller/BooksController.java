@@ -109,7 +109,7 @@ public class BooksController {
     }
 
     @PostMapping
-    public ResponseEntity<?> editEbook(@RequestBody EbookDto2 ebookDto){
+    public ResponseEntity<?> editEbook(@RequestBody EbookDto2 ebookDto) throws IOException {
         Ebook ebook = ebookService.getEbookById(ebookDto.getId());
         ebook.setId(ebookDto.getId());
         ebook.setTitle(ebookDto.getTitle());
@@ -124,14 +124,17 @@ public class BooksController {
         ebook.setLanguage(language);
 
         ebookService.addEditEbook(ebook);
+        Indexer.deleteFileFromIndex(ebook.getId());
+        Indexer.addFileToIndex(ebook);
+
         return new ResponseEntity<>(
                 new Status(true, "Ebook successfully edited!"),
                 HttpStatus.OK);
     }
 
-    // TODO: 12/16/17 Finish deleting ebook
     @DeleteMapping("/{id}")
     public void deleteEbook(@PathVariable("id") int id) throws IOException {
+        ebookService.deleteEbook(id);
         // when deleting a book remove it from lucene index
         Indexer.deleteFileFromIndex(id);
     }
