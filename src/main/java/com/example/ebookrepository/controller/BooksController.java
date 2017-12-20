@@ -133,10 +133,14 @@ public class BooksController {
     }
 
     @DeleteMapping("/{id}")
-    public void deleteEbook(@PathVariable("id") int id) throws IOException {
+    public ResponseEntity<?> deleteEbook(@PathVariable("id") int id) throws IOException {
         ebookService.deleteEbook(id);
         // when deleting a book remove it from lucene index
         Indexer.deleteFileFromIndex(id);
+
+        return new ResponseEntity<>(
+                new Status(true, "Ebook delete successfully!"),
+                HttpStatus.OK);
     }
 
     @PutMapping("/upload")

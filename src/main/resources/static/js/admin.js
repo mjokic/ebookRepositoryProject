@@ -412,6 +412,32 @@ $('#category-edit-form').submit(function (e) {
 
 });
 
+$('#delete_ebook').click(function () {
+    var ebookId = $('#ebookIdEdit').val();
+
+    if (confirm('Are you sure you want do delete this ebook?')) {
+        $.ajax({
+            type: 'DELETE',
+            url: '/ebook/' + ebookId,
+            contentType: "application/json",
+            beforeSend: function (request) {
+                request.setRequestHeader("Authorization", token);
+            },
+            success: function (response) {
+                refresh();
+                alert(response['message']);
+            },
+            error: function (err) {
+                var json = err.responseJSON;
+                alert(json['message']);
+            }
+        });
+    } else {
+        // Do nothing!
+    }
+
+});
+
 
 function refresh() {
     $('.panel-group').remove(); // removing old results
