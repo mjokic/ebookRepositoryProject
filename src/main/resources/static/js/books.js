@@ -220,6 +220,7 @@ $('#search_form').submit(function (e) {
                 $('#table' + category_id).replaceWith(myTable);
             })
 
+            $('#modalSearch').modal('toggle');
         },
         error: function (err) {
             var json = err.responseJSON;
@@ -261,3 +262,7 @@ function groupBy(collection) {
     }
     return result;
 }
+
+$('#modalSearch').on('hidden.bs.modal', function () {
+    $(this).find("input").val('').end();
+});
