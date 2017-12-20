@@ -45,13 +45,11 @@ function generatePanelCategories(categories) {
             '            <div id="pan' + categoryId + '" class="panel panel-default">' +
             '                <!-- Default panel contents -->' +
             '                <div id="' + categoryId + '" onclick="onCategoryClick(this.id)" class="panel-heading clearfix" data-toggle="collapse" href="#' + collapseId + '">' +
-            '                    <h4 class="panel-title pull-left">' +
-            '                        ' + category_name +
-            '                    </h4>' +
+            '                    <h4 class="panel-title pull-left">' + category_name + '</h4>' +
             '                    <div class="pull-right">' +
             '                       <span class="glyphicon glyphicon-plus-sign add-ebook" data-toggle="modal" data-target="#modalAddEbook"></span>' +
-            '                       <span class="glyphicon glyphicon-minus-sign"></span> ' +
-            '                       <span class="glyphicon glyphicon-edit"></span> ' +
+            '                       <span class="glyphicon glyphicon-edit edit-category" data-toggle="modal" data-target="#modalEditCategory"></span> ' +
+            '                       <span class="glyphicon glyphicon-minus-sign remove-category"></span> ' +
             '                    </div>' +
             '                </div>' +
             '                <div id="' + collapseId + '" class="panel-collapse collapse">' +
@@ -190,6 +188,37 @@ $('body').on('click', 'span.add-ebook', function () {
     loadLanguages($('#ebookLanguage'), null);
 });
 
+$('body').on('click', 'span.edit-category', function () {
+    var categoryId = $(this).closest('div.panel-heading').attr('id');
+    var categoryName = $(this).closest('div.panel-heading').find('h4.panel-title').text();
+    $('#categoryIdEdit').val(categoryId);
+    $('#categoryNameEdit').val(categoryName);
+});
+
+$('body').on('click', 'span.remove-category', function () {
+    var categoryId = $(this).closest('div.panel-heading').attr('id');
+
+    if (confirm('Are you sure you want do delete this category?')) {
+        $.ajax({
+            type: 'DELETE',
+            url: '/category/' + categoryId,
+            contentType: "application/json",
+            beforeSend: function (request) {
+                request.setRequestHeader("Authorization", token);
+            },
+            success: function (response) {
+                refresh();
+                alert(response['message']);
+            },
+            error: function (err) {
+                var json = err.responseJSON;
+                alert(json['message']);
+            }
+        });
+    } else {
+        // Do nothing!
+    }
+});
 
 $('#modalAddEbook').on('hidden.bs.modal', function () {
     $(this).find("input,select").val('').end();
@@ -319,3 +348,72 @@ $('#ebook-edit-form').submit(function (e) {
     });
 
 });
+
+$('#category-add-form').submit(function (e) {
+    e.preventDefault();
+
+    var categoryName = $('#categoryNameAdd').val();
+
+    var data = {
+        "name": categoryName
+    };
+
+    $.ajax({
+        type: 'PUT',
+        url: $(this).attr("action"),
+        data: JSON.stringify(data),
+        contentType: "application/json",
+        beforeSend: function (request) {
+            request.setRequestHeader("Authorization", token);
+        },
+        success: function (response) {
+            $('#modalAddCategory').modal('toggle');
+            refresh();
+            alert(response['message']);
+        },
+        error: function (err) {
+            var json = err.responseJSON;
+            alert(json['message']);
+        }
+    });
+
+});
+
+$('#category-edit-form').submit(function (e) {
+    e.preventDefault();
+
+    var categoryId = $('#categoryIdEdit').val();
+    var categoryName = $('#categoryNameEdit').val();
+
+
+    var data = {
+        "id": categoryId,
+        "name": categoryName
+    };
+
+    $.ajax({
+        type: $(this).attr("method"),
+        url: $(this).attr("action"),
+        data: JSON.stringify(data),
+        contentType: "application/json",
+        beforeSend: function (request) {
+            request.setRequestHeader("Authorization", token);
+        },
+        success: function (response) {
+            $('#modalEditCategory').modal('toggle');
+            refresh();
+            alert(response['message']);
+        },
+        error: function (err) {
+            var json = err.responseJSON;
+            alert(json['message']);
+        }
+    });
+
+});
+
+
+function refresh() {
+    $('.panel-group').remove(); // removing old results
+    loadCategories(true, 0);
+}
