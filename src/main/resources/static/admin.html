@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <link rel="stylesheet" type="text/css" href="css/bootstrap.min.css">
     <link rel="stylesheet" type="text/css" href="css/style.css">
+    <link rel="stylesheet" type="text/css" href="css/bootstrap-toggle.min.css">
 
     <title>eBook Repository - Admin</title>
 
@@ -32,14 +33,11 @@
 
             <ul class="nav navbar-nav navbar-right">
                 <li>
-                    <form class="navbar-form navbar-left">
-                        <button type="submit" class="btn btn-default">
+                    <div class="navbar-form navbar-left">
+                        <button class="btn btn-default" data-toggle="modal" data-target="#modalSearch">
                             <span class="glyphicon glyphicon-search"></span>
                         </button>
-                        <div class="form-group">
-                            <input type="text" class="form-control" placeholder="Search">
-                        </div>
-                    </form>
+                    </div>
                 </li>
                 <li>
                     <a id="me" style="display: none;">
@@ -223,12 +221,63 @@
         </div>
     </div>
 
+    <!-- Modal Search-->
+    <div id="modalSearch" class="modal fade" role="dialog">
+        <div class="modal-dialog">
+
+            <!-- Modal content-->
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h4 class="modal-title">Search Ebook</h4>
+                </div>
+                <div class="modal-body">
+                    <form id="search_form" action="/search" method="post">
+                        <div class="form-group form-inline">
+                            <input id="title"  type="text" class="form-control" placeholder="Title">
+                            <input id="titleCb" type="checkbox" checked data-toggle="toggle" data-on="OR" data-off="AND" data-onstyle="primary" data-offstyle="primary">
+                        </div>
+                        <div class="form-group form-inline">
+                            <input id="author"  type="text" class="form-control" placeholder="Author">
+                            <input id="authorCb" type="checkbox" checked data-toggle="toggle" data-on="OR" data-off="AND" data-onstyle="primary" data-offstyle="primary">
+                        </div>
+                        <div class="form-group form-inline">
+                            <input id="keywords"  type="text" class="form-control" placeholder="Keywords">
+                            <input id="keywordsCb" type="checkbox" checked data-toggle="toggle" data-on="OR" data-off="AND" data-onstyle="primary" data-offstyle="primary">
+                        </div>
+                        <div class="form-group form-inline">
+                            <input id="content" type="text" class="form-control" placeholder="Content">
+                            <input id="contentCb" type="checkbox" checked data-toggle="toggle" data-on="OR" data-off="AND" data-onstyle="primary" data-offstyle="primary">
+                        </div>
+                        <div class="form-group form-inline">
+                            <input id="language" type="text" class="form-control" placeholder="Language">
+                            <input id="languageCb" type="checkbox" checked data-toggle="toggle" data-on="OR" data-off="AND" data-onstyle="primary" data-offstyle="primary">
+                        </div>
+                        <div class="form-group form-inline">
+                            <p>Special search type:</p>
+                            <label class="radio-inline">
+                                <input type="radio" name="searchType" checked value="0">None
+                            </label>
+                            <label class="radio-inline">
+                                <input type="radio" name="searchType" value="1">Fuzzy
+                            </label>
+                            <label class="radio-inline">
+                                <input type="radio" name="searchType" value="2">Phrase
+                            </label>
+                        </div>
+                        <input type="submit" class="form-control" value="Search">
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
 
 <script src="js/jquery-3.2.1.js"></script>
 <script src="js/bootstrap.js"></script>
 <script src="js/main.js"></script>
 <script src="js/admin.js"></script>
-
+<script src="js/bootstrap-toggle.min.js"></script>
 
 </body>
 </html>
