@@ -1,6 +1,7 @@
 package com.example.ebookrepository.lucene;
 
 
+import com.example.ebookrepository.lucene.analyzer.MyCustomAnalizer;
 import com.example.ebookrepository.model.Ebook;
 import org.apache.lucene.analysis.standard.StandardAnalyzer;
 import org.apache.lucene.document.Document;
@@ -26,12 +27,11 @@ import static com.example.ebookrepository.lucene.Constants.luceneDir;
 public class Indexer {
 
     public static void addFileToIndex(Ebook ebook) throws IOException {
-
         File file = new File("src/main/resources/files/" + ebook.getFileName());
         Directory directory = new SimpleFSDirectory(luceneDir);
 
 
-        IndexWriterConfig config = new IndexWriterConfig(new StandardAnalyzer());
+        IndexWriterConfig config = new IndexWriterConfig(new MyCustomAnalizer());
         config.setOpenMode(IndexWriterConfig.OpenMode.CREATE_OR_APPEND);
 
         try (IndexWriter indexWriter = new IndexWriter(directory, config)) {
