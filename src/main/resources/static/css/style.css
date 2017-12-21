@@ -133,3 +133,19 @@ tbody td, thead th {
 .form-inline .form-control {
     width: 500px;
 }
+
+.float{
+    position:fixed;
+    width:60px;
+    height:60px;
+    bottom:40px;
+    right:40px;
+    background-color: #d6d6d6;
+    color: #939f9e;
+    border-radius:50px;
+    text-align:center;
+}
+
+.my-float{
+    margin-top:22px;
+}
