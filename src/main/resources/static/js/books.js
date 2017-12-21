@@ -178,6 +178,8 @@ $('#search_form').submit(function (e) {
     var language = $('#language').val();
     var languageCb = $('#languageCb').prop('checked');
 
+    var type = $("input[name='searchType']:checked").val();
+
     var data = {
         "title": {
             "value": title,
@@ -198,7 +200,8 @@ $('#search_form').submit(function (e) {
         "language": {
             "value": language,
             "searchType": languageCb
-        }
+        },
+        "type": type
     };
 
     $.ajax({
@@ -264,5 +267,5 @@ function groupBy(collection) {
 }
 
 $('#modalSearch').on('hidden.bs.modal', function () {
-    $(this).find("input").val('').end();
+    $(this).find("input[type=text]").val('').end();
 });

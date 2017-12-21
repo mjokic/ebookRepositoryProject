@@ -33,9 +33,11 @@
 
             <ul class="nav navbar-nav navbar-right">
                 <li>
-                    <a data-toggle="modal" data-target="#modalSearch">
-                        <span class="glyphicon glyphicon-search"></span>
-                    </a>
+                    <div class="navbar-form navbar-left">
+                        <button class="btn btn-default" data-toggle="modal" data-target="#modalSearch">
+                            <span class="glyphicon glyphicon-search"></span>
+                        </button>
+                    </div>
                 </li>
                 <li>
                     <a id="me" style="display: none;">
@@ -132,6 +134,18 @@
                             <div class="form-group form-inline">
                                 <input id="language" type="text" class="form-control" placeholder="Language">
                                 <input id="languageCb" type="checkbox" checked data-toggle="toggle" data-on="OR" data-off="AND" data-onstyle="primary" data-offstyle="primary">
+                            </div>
+                            <div class="form-group form-inline">
+                                <p>Special search type:</p>
+                                <label class="radio-inline">
+                                    <input type="radio" name="searchType" checked value="0">None
+                                </label>
+                                <label class="radio-inline">
+                                    <input type="radio" name="searchType" value="1">Fuzzy
+                                </label>
+                                <label class="radio-inline">
+                                    <input type="radio" name="searchType" value="2">Phrase
+                                </label>
                             </div>
                             <input type="submit" class="form-control" value="Search">
                         </form>

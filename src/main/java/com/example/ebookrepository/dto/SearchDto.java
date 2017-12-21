@@ -9,13 +9,15 @@ public class SearchDto {
     private Keywords keywords;
     private Content content;
     private Language language;
+    private int type;
 
-    public SearchDto(){}
+    public SearchDto() {
+    }
 
     public Title getTitle() {
-        if (!title.searchType){
+        if (!title.searchType) {
             title.occur = BooleanClause.Occur.MUST;
-        }else {
+        } else {
             title.occur = BooleanClause.Occur.SHOULD;
         }
         return title;
@@ -26,9 +28,9 @@ public class SearchDto {
     }
 
     public Author getAuthor() {
-        if (!author.searchType){
+        if (!author.searchType) {
             author.occur = BooleanClause.Occur.MUST;
-        }else {
+        } else {
             author.occur = BooleanClause.Occur.SHOULD;
         }
         return author;
@@ -39,9 +41,9 @@ public class SearchDto {
     }
 
     public Keywords getKeywords() {
-        if (!keywords.searchType){
+        if (!keywords.searchType) {
             keywords.occur = BooleanClause.Occur.MUST;
-        }else {
+        } else {
             keywords.occur = BooleanClause.Occur.SHOULD;
         }
         return keywords;
@@ -52,9 +54,9 @@ public class SearchDto {
     }
 
     public Content getContent() {
-        if (!content.searchType){
+        if (!content.searchType) {
             content.occur = BooleanClause.Occur.MUST;
-        }else {
+        } else {
             content.occur = BooleanClause.Occur.SHOULD;
         }
         return content;
@@ -65,9 +67,9 @@ public class SearchDto {
     }
 
     public Language getLanguage() {
-        if (!language.searchType){
+        if (!language.searchType) {
             language.occur = BooleanClause.Occur.MUST;
-        }else {
+        } else {
             language.occur = BooleanClause.Occur.SHOULD;
         }
         return language;
@@ -76,6 +78,15 @@ public class SearchDto {
     public void setLanguage(Language language) {
         this.language = language;
     }
+
+    public int getType() {
+        return type;
+    }
+
+    public void setType(int type) {
+        this.type = type;
+    }
+
 
     public class Title {
         public String value;
