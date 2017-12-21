@@ -91,6 +91,7 @@ $('#register-form').submit(function (e) {
         dataType: "json",
         success: function (data) {
             alert(data.message);
+            $('#register-form')[0].reset();
         },
         error: function (err) {
             var json = err.responseJSON;

@@ -149,6 +149,9 @@ function loadBook(bookId) {
             if (downloadable){
                 $('#downloadLink').text("Download")
                     .attr("href", "/ebook/" + book['id'] + "/download");
+            }else{
+                $('#downloadLink').text("Please register to download!")
+                    .attr("href", "#");
             }
         }
     });
@@ -159,6 +162,24 @@ $('body').on('click', 'tr.clickable-row', function () {
     loadBook(ebookId);
 });
 
+$('body').on('click', 'span.glyphicon-user', function () {
+    $.ajax({
+        type: "GET",
+        url: "/user/me",
+        dataType: "json",
+        contentType: "application/json",
+        beforeSend: function (request) {
+            request.setRequestHeader("Authorization", token);
+        },
+        success: function (user) {
+            setUserData(user);
+        },
+        error: function (err) {
+            var json = err.responseJSON;
+            alert(json['message']);
+        }
+    });
+});
 
 $('#search_form').submit(function (e) {
     e.preventDefault();
@@ -266,6 +287,81 @@ function groupBy(collection) {
     return result;
 }
 
+function setUserData(user) {
+    $('#username').val(user['username']);
+    $('#firstName').val(user['firstName']);
+    $('#lastName').val(user['lastName']);
+}
+
 $('#modalSearch').on('hidden.bs.modal', function () {
     $(this).find("input[type=text]").val('').end();
 });
+
+$('#personal_info_form').submit(function (e) {
+    e.preventDefault();
+
+    var firstName = $('#firstName').val();
+    var lastName = $('#lastName').val();
+
+    var data = {
+        "firstName": firstName,
+        "lastName": lastName
+    };
+
+    $.ajax({
+        type: $(this).attr("method"),
+        url: $(this).attr("action"),
+        dataType: "json",
+        data: JSON.stringify(data),
+        contentType: "application/json",
+        beforeSend: function (request) {
+            request.setRequestHeader("Authorization", token);
+        },
+        success: function (response) {
+            alert(response['message']);
+            $('#modalPersonal').modal('toggle');
+        },
+        error: function (err) {
+            var json = err.responseJSON;
+            alert(json['message']);
+        }
+    });
+
+});
+
+$('#personal_password_form').submit(function (e) {
+    e.preventDefault();
+
+    var pass1 = $('#password1').val();
+    var pass2 = $('#password2').val();
+
+    if (pass1 !== pass2){
+        alert("Passwords doesn't match!");
+        return;
+    }
+
+    var data = {
+        "password": pass1
+    };
+
+    $.ajax({
+        type: $(this).attr("method"),
+        url: $(this).attr("action"),
+        dataType: "json",
+        data: JSON.stringify(data),
+        contentType: "application/json",
+        beforeSend: function (request) {
+            request.setRequestHeader("Authorization", token);
+        },
+        success: function (response) {
+            alert(response['message']);
+            $('#modalPersonal').modal('toggle');
+        },
+        error: function (err) {
+            var json = err.responseJSON;
+            alert(json['message']);
+        }
+    });
+
+});
+

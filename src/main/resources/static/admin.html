@@ -28,7 +28,8 @@
         <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
             <ul class="nav navbar-nav">
                 <li class="active"><a href="#">Books</a></li>
-                <li><a href="about.html">About</a></li>
+                <li><a href="#">Languages</a></li>
+                <li><a href="#">Users</a></li>
             </ul>
 
             <ul class="nav navbar-nav navbar-right">
@@ -40,7 +41,7 @@
                     </div>
                 </li>
                 <li>
-                    <a id="me" style="display: none;">
+                    <a id="me" style="display: none;" data-toggle="modal" data-target="#modalPersonal">
                         <span class="glyphicon glyphicon-user"></span>
                     </a>
                 </li>
@@ -272,6 +273,51 @@
         </div>
     </div>
 
+    <!-- Modal Personal-->
+    <div id="modalPersonal" class="modal fade" role="dialog">
+        <div class="modal-dialog">
+
+            <!-- Modal content-->
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h4 class="modal-title">Personal Info</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-lg-6">
+                            <p class="text-center">Update Name:</p>
+                            <form id="personal_info_form" action="/user/me" method="post">
+                                <div class="form-group">
+                                    <input class="form-control" id="username" type="text" disabled>
+                                </div>
+                                <div class="form-group">
+                                    <input class="form-control" id="firstName" type="text" placeholder="First Name">
+                                </div>
+                                <div class="form-group">
+                                    <input class="form-control" id="lastName" type="text" placeholder="Last Name">
+                                </div>
+                                <input type="submit" class="form-control" value="Update">
+                            </form>
+                        </div>
+                        <div class="col-lg-6">
+                            <p class="text-center">Update password:</p>
+                            <form id="personal_password_form" action="/user/me/password" method="post">
+                                <div class="form-group">
+                                    <input class="form-control" id="password1" type="password" placeholder="Enter new password">
+                                </div>
+                                <div class="form-group">
+                                    <input class="form-control" id="password2" type="password" placeholder="Confirm new password">
+                                </div>
+                                <input type="submit" class="form-control" value="Update">
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
 
 <script src="js/jquery-3.2.1.js"></script>
 <script src="js/bootstrap.js"></script>
