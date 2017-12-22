@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" type="text/css" href="css/bootstrap.min.css">
+    <link rel="stylesheet" type="text/css" href="css/style.css">
+
+    <title>eBook Repository - Admin</title>
+
+</head>
+
+
+<nav class="navbar navbar-default navbar-fixed-top" role="navigation">
+
+    <div class="container-fluid">
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle" data-toggle="collapse"
+                    data-target="#bs-example-navbar-collapse-1">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="/">eBook Repository</a>
+        </div>
+
+        <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+            <ul class="nav navbar-nav">
+                <li><a href="admin.html">Books</a></li>
+                <li class="active"><a href="#">Languages</a></li>
+                <li><a href="users.html">Users</a></li>
+            </ul>
+
+            <ul class="nav navbar-nav navbar-right">
+                <li>
+                    <a id="me" style="display: none;" data-toggle="modal" data-target="#modalPersonal">
+                        <span class="glyphicon glyphicon-user"></span>
+                    </a>
+                </li>
+                <li>
+                    <a id="logout" style="display: none">
+                        <span class="glyphicon glyphicon-log-out"></span>
+                    </a>
+                </li>
+            </ul>
+        </div><!-- /.navbar-collapse -->
+    </div>
+</nav>
+<body>
+
+<div id="main" class="container">
+
+    <div id="table" class="center-block">
+
+    </div>
+
+</div>
+<button class="btn btn-default float my-float" data-toggle="modal" data-target="#modalAddLanguage"><span class="glyphicon glyphicon-plus"></span></button>
+
+<!-- Modal Add Language -->
+<div id="modalAddLanguage" class="modal fade" role="dialog">
+    <div class="modal-dialog">
+
+        <!-- Modal content-->
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title">Add Language</h4>
+            </div>
+
+            <div class="modal-body">
+                <form id="language-add-form" action="/language" method="post">
+                    <div class="form-group">
+                        <label for="languageNameAdd">Name</label>
+                        <input id="languageNameAdd" type="text" class="form-control" placeholder="Name">
+                    </div>
+                    <button type="submit" class="btn btn-default">Add</button>
+                </form>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<!-- Modal Edit Language -->
+<div id="modalEditLanguage" class="modal fade" role="dialog">
+    <div class="modal-dialog">
+
+        <!-- Modal content-->
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title">Edit Language</h4>
+            </div>
+
+            <div class="modal-body">
+                <form id="language-edit-form" action="/language" method="post">
+                    <div class="form-group">
+                        <label for="languageNameEdit">Name</label>
+                        <input id="languageNameEdit" type="text" class="form-control">
+                        <input id="languageId" type="hidden">
+                    </div>
+                    <button type="submit" class="btn btn-default">Edit</button>
+                    <button id="delete_lang" type="button" class="btn btn-danger pull-right">Delete</button>
+                </form>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+
+<!-- Modal Personal-->
+<div id="modalPersonal" class="modal fade" role="dialog">
+    <div class="modal-dialog">
+
+        <!-- Modal content-->
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title">Personal Info</h4>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-lg-6">
+                        <p class="text-center">Update Name:</p>
+                        <form id="personal_info_form" action="/user/me" method="post">
+                            <div class="form-group">
+                                <input class="form-control" id="username" type="text" disabled>
+                            </div>
+                            <div class="form-group">
+                                <input class="form-control" id="firstName" type="text" placeholder="First Name">
+                            </div>
+                            <div class="form-group">
+                                <input class="form-control" id="lastName" type="text" placeholder="Last Name">
+                            </div>
+                            <input type="submit" class="form-control" value="Update">
+                        </form>
+                    </div>
+                    <div class="col-lg-6">
+                        <p class="text-center">Update password:</p>
+                        <form id="personal_password_form" action="/user/me/password" method="post">
+                            <div class="form-group">
+                                <input class="form-control" id="password1" type="password" placeholder="Enter new password">
+                            </div>
+                            <div class="form-group">
+                                <input class="form-control" id="password2" type="password" placeholder="Confirm new password">
+                            </div>
+                            <input type="submit" class="form-control" value="Update">
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<script src="js/jquery-3.2.1.js"></script>
+<script src="js/bootstrap.js"></script>
+<script src="js/main.js"></script>
+<script src="js/language.js"></script>
+
+</body>
+</html>

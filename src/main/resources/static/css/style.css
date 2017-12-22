@@ -149,3 +149,8 @@ tbody td, thead th {
 .my-float{
     margin-top:22px;
 }
+
+.table {
+    margin: auto;
+    width: 50% !important;
+}

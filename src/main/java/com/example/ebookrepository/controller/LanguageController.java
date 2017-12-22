@@ -27,6 +27,10 @@ public class LanguageController {
         return languageService.getAllLanguages();
     }
 
+    @GetMapping("/{id}")
+    public Language getLanguageById(@PathVariable("id") int id){
+        return languageService.getLanguageById(id);
+    }
 
     @PutMapping
     public ResponseEntity<?> addLanguage(@RequestBody Language language){
