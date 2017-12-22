@@ -1,8 +1,10 @@
 package com.example.ebookrepository.controller;
 
 import com.example.ebookrepository.dto.UserDto;
+import com.example.ebookrepository.model.Category;
 import com.example.ebookrepository.model.Status;
 import com.example.ebookrepository.model.User;
+import com.example.ebookrepository.service.CategoryService;
 import com.example.ebookrepository.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -19,12 +21,15 @@ import java.util.stream.Collectors;
 public class UserController {
 
     private final UserService userService;
+    private final CategoryService categoryService;
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
 
 
     @Autowired
-    public UserController(UserService userService, BCryptPasswordEncoder bCryptPasswordEncoder) {
+    public UserController(UserService userService, CategoryService categoryService,
+                          BCryptPasswordEncoder bCryptPasswordEncoder) {
         this.userService = userService;
+        this.categoryService = categoryService;
         this.bCryptPasswordEncoder = bCryptPasswordEncoder;
     }
 
@@ -98,9 +103,24 @@ public class UserController {
     }
 
     @PutMapping
-    public ResponseEntity<?> addUser(@RequestBody User user) {
-        user.setPassword(bCryptPasswordEncoder.encode(user.getPassword()));
+    public ResponseEntity<?> addUser(@RequestBody UserDto userDto) {
+        String type;
+        switch (userDto.getType()){
+            case "administrator":
+                type = "administrator";
+                break;
+            default:
+                type = "subscriber";
+        }
+
+
+        Category category = categoryService.getCategoryById(userDto.getCategoryId());
+
+        User user = new User(userDto.getFirstName(), userDto.getLastName(), userDto.getUsername(),
+                bCryptPasswordEncoder.encode(userDto.getPassword()), type);
+        user.setCategory(category);
         userService.addEditUser(user);
+
         return new ResponseEntity<>(
                 new Status(true, "New user successfully created!"),
                 HttpStatus.OK);

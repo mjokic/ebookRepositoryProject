@@ -22,3 +22,7 @@ nbbuild/
 dist/
 nbdist/
 .nb-gradle/
+
+### Lucene ###
+src/main/resources/files/
+src/main/resources/lucene/

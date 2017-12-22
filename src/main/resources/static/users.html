@@ -69,8 +69,36 @@
                 <h4 class="modal-title">Add User</h4>
             </div>
             <div class="modal-body">
-                <form action="/user" method="post">
-
+                <form id="form-user-add" action="/user" method="post">
+                    <div class="form-group">
+                        <input type="text" id="firstNameAdd"
+                               class="form-control" placeholder="First Name" value="">
+                    </div>
+                    <div class="form-group">
+                        <input type="text" id="lastNameAdd"
+                               class="form-control" placeholder="Last Name" value="">
+                    </div>
+                    <div class="form-group">
+                        <input type="text" id="usernameAdd"
+                               class="form-control" placeholder="Username" value="">
+                    </div>
+                    <div class="form-group">
+                        <input type="password" id="passwordAdd"
+                               class="form-control" placeholder="Password">
+                    </div>
+                    <div class="form-group">
+                        <label for="userType">Select type:</label>
+                        <select class="form-control" id="userType">
+                            <!-- generate dynamically -->
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="userCategory">Select category:</label>
+                        <select class="form-control" id="userCategory">
+                            <!-- generate dynamically -->
+                        </select>
+                    </div>
+                    <button type="submit" class="form-control btn btn-default" value="Log In">Add</button>
                 </form>
             </div>
         </div>
