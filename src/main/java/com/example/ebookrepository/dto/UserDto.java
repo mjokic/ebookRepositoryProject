@@ -1,5 +1,6 @@
 package com.example.ebookrepository.dto;
 
+import com.example.ebookrepository.model.Category;
 import com.example.ebookrepository.model.User;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
@@ -12,6 +13,7 @@ public class UserDto {
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     private String password;
     private String type;
+    private int categoryId;
 
     public UserDto() {
     }
@@ -23,6 +25,13 @@ public class UserDto {
         this.username = user.getUsername();
         this.password = user.getPassword();
         this.type = user.getType();
+
+        Category userCategory = user.getCategory();
+        if (userCategory == null){
+            this.categoryId = -1;
+        }else {
+            this.categoryId = userCategory.getId();
+        }
     }
 
     public int getId() {
@@ -71,5 +80,13 @@ public class UserDto {
 
     public void setType(String type) {
         this.type = type;
+    }
+
+    public int getCategoryId() {
+        return categoryId;
+    }
+
+    public void setCategoryId(int categoryId) {
+        this.categoryId = categoryId;
     }
 }

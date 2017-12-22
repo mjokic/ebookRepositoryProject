@@ -11,6 +11,8 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
 import java.security.Principal;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/user")
@@ -21,15 +23,15 @@ public class UserController {
 
 
     @Autowired
-    public UserController(UserService userService, BCryptPasswordEncoder bCryptPasswordEncoder){
+    public UserController(UserService userService, BCryptPasswordEncoder bCryptPasswordEncoder) {
         this.userService = userService;
         this.bCryptPasswordEncoder = bCryptPasswordEncoder;
     }
 
 
     @GetMapping("/me")
-    public ResponseEntity<?> getInfoAboutMe(Principal principal){
-        if (principal == null){
+    public ResponseEntity<?> getInfoAboutMe(Principal principal) {
+        if (principal == null) {
             return new ResponseEntity<>(
                     new Status(false, "You're not logged in!"),
                     HttpStatus.BAD_REQUEST);
@@ -43,8 +45,8 @@ public class UserController {
     }
 
     @PostMapping("/me")
-    public ResponseEntity<?> updateInfoAboutMe(Principal principal, @RequestBody UserDto userDto){
-        if (principal == null){
+    public ResponseEntity<?> updateInfoAboutMe(Principal principal, @RequestBody UserDto userDto) {
+        if (principal == null) {
             return new ResponseEntity<>(
                     new Status(false, "You're not logged in!"),
                     HttpStatus.BAD_REQUEST);
@@ -62,8 +64,8 @@ public class UserController {
     }
 
     @PostMapping("/me/password")
-    public ResponseEntity<?> updateMyPassword(Principal principal, @RequestBody UserDto userDto){
-        if (principal == null){
+    public ResponseEntity<?> updateMyPassword(Principal principal, @RequestBody UserDto userDto) {
+        if (principal == null) {
             return new ResponseEntity<>(
                     new Status(false, "You're not logged in!"),
                     HttpStatus.BAD_REQUEST);
@@ -71,7 +73,7 @@ public class UserController {
 
         String password = userDto.getPassword();
 
-        if (password == null){
+        if (password == null) {
             return new ResponseEntity<>(
                     new Status(false, "You didn't enter any password!"),
                     HttpStatus.BAD_REQUEST);
@@ -84,6 +86,39 @@ public class UserController {
 
         return new ResponseEntity<>(
                 new Status(true, "Password successfully changed!"),
+                HttpStatus.OK);
+    }
+
+
+    @GetMapping
+    public List<UserDto> getAllUsers() {
+        return userService.getAllUsers()
+                .stream().map(UserDto::new)
+                .collect(Collectors.toList());
+    }
+
+    @PutMapping
+    public ResponseEntity<?> addUser(@RequestBody User user) {
+        user.setPassword(bCryptPasswordEncoder.encode(user.getPassword()));
+        userService.addEditUser(user);
+        return new ResponseEntity<>(
+                new Status(true, "New user successfully created!"),
+                HttpStatus.OK);
+    }
+
+    @PostMapping
+    public ResponseEntity<?> editUser(@RequestBody User user) {
+
+        return new ResponseEntity<>(
+                new Status(true, "User successfully edited!"),
+                HttpStatus.OK);
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<?> deleteUser(@PathVariable("id") int id) {
+        userService.deleteUser(id);
+        return new ResponseEntity<>(
+                new Status(true, "User successfully deleted!"),
                 HttpStatus.OK);
     }
 

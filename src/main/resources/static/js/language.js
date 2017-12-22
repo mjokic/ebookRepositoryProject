@@ -83,7 +83,7 @@ function generateTable(languages) {
             '                </tr>';
     });
 
-    return '<table id="table_languages" class="table table-striped table-bordered">' +
+    return '<table id="table_languages" class="table table-striped table-bordered table_lang">' +
         '<thead>' +
         '                <tr>' +
         '                    <th>Id</th>' +
@@ -203,10 +203,6 @@ $('#delete_lang').click(function () {
 });
 
 
-$('#modalSearch').on('hidden.bs.modal', function () {
-    $(this).find("input[type=text]").val('').end();
-});
-
 $('body').on('click', 'span.glyphicon-user', function () {
     $.ajax({
         type: "GET",
@@ -225,6 +221,7 @@ $('body').on('click', 'span.glyphicon-user', function () {
         }
     });
 });
+
 function setUserData(user) {
     $('#username').val(user['username']);
     $('#firstName').val(user['firstName']);

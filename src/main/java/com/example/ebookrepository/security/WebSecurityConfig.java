@@ -32,6 +32,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                         "/category/**",
                         "/language/**",
                         "/ebook/**").permitAll()
+                .antMatchers("/user").hasAuthority("administrator")
                 .anyRequest().authenticated()
                 .and()
                 .addFilter(new JwtAuthenticationFilter(authenticationManager()))

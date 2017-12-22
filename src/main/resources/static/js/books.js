@@ -84,7 +84,7 @@ function generateTable(category_id, books) {
             '                </tr>';
     });
 
-    return '<table id="table' + category_id + '" class="table table-striped">' +
+    return '<table id="table' + category_id + '" class="table table-striped table_books">' +
         '<thead>' +
         '                <tr>' +
         '                    <th>Id</th>' +

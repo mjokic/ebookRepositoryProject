@@ -110,25 +110,44 @@ tr:after {
     clear: both;
 }
 
-thead th {
+/* table books*/
+.table_books thead th {
     height: 30px;
-    /*text-align: left;*/
 }
 
-tbody {
+.table_books tbody {
     height: 300px;
     overflow-y: auto;
 }
 
-thead {
-    /* fallback */
-}
-
-
-tbody td, thead th {
+.table_books tbody td, .table_books thead th {
     width: 25%;
     float: left;
 }
+/*---*/
+
+/* table users */
+.table_users thead th {
+    height: 30px;
+    /*text-align: left;*/
+}
+
+.table_users tbody td, .table_users thead th {
+    width: 16.66666%;
+    float: left;
+}
+/*--*/
+
+/* table languages */
+.table_lang thead th {
+    height: 30px;
+}
+
+.table_lang tbody td, .table_lang thead th {
+    width: 50%;
+    float: left;
+}
+/*--*/
 
 .form-inline .form-control {
     width: 500px;
@@ -150,7 +169,3 @@ tbody td, thead th {
     margin-top:22px;
 }
 
-.table {
-    margin: auto;
-    width: 50% !important;
-}
