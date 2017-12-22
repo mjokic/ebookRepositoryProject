@@ -473,6 +473,7 @@ $('#delete_ebook').click(function () {
                 request.setRequestHeader("Authorization", token);
             },
             success: function (response) {
+                $('#modalEditEbook').modal('toggle');
                 refresh();
                 alert(response['message']);
             },
