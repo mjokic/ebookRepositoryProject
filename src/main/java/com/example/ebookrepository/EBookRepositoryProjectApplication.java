@@ -44,7 +44,7 @@ public class EBookRepositoryProjectApplication implements CommandLineRunner {
         User user = new User("Marko", "Jokic", "m",
                 "$2a$10$uXcHV5fz.y7j6xsXfm7CWOKtrA5eKFANdq5dm7ltHonogzG7PsP0u",
                 "administrator");
-//        userService.addEditUser(user);
+        userService.addEditUser(user);
 
         Language language1 = new Language("english");
         Language language2 = new Language("serbian");
