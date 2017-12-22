@@ -27,7 +27,7 @@ public class MainController {
 
     @RequestMapping(path = "/register", method = RequestMethod.POST, consumes = "application/json")
     public ResponseEntity<Status> register(@RequestBody User user) {
-        user.setType("visitor");
+        user.setType("subscriber");
         user.setPassword(bCryptPasswordEncoder.encode(user.getPassword()));
         userService.addEditUser(user);
         Status status = new Status(true, "Registration Successful!");

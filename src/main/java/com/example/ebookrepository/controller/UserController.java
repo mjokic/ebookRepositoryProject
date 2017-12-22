@@ -102,6 +102,12 @@ public class UserController {
                 .collect(Collectors.toList());
     }
 
+    @GetMapping("/{id}")
+    public UserDto getUserById(@PathVariable("id") int id){
+        User user = userService.getUserById(id);
+        return new UserDto(user);
+    }
+
     @PutMapping
     public ResponseEntity<?> addUser(@RequestBody UserDto userDto) {
         String type;
@@ -127,7 +133,34 @@ public class UserController {
     }
 
     @PostMapping
-    public ResponseEntity<?> editUser(@RequestBody User user) {
+    public ResponseEntity<?> editUser(@RequestBody UserDto userDto) {
+        String type;
+        switch (userDto.getType()){
+            case "administrator":
+                type = "administrator";
+                break;
+            default:
+                type = "subscriber";
+        }
+
+
+        Category category = categoryService.getCategoryById(userDto.getCategoryId());
+        User user = userService.getUserById(userDto.getId());
+
+        if (user.getFirstName() != null && !user.getFirstName().equals(""))
+            user.setFirstName(userDto.getFirstName());
+
+        if (user.getLastName() != null && !user.getLastName().equals(""))
+            user.setLastName(userDto.getLastName());
+
+        user.setCategory(category);
+        user.setType(type);
+
+        if (userDto.getPassword() != null && !userDto.getPassword().equals("")){
+            user.setPassword(bCryptPasswordEncoder.encode(userDto.getPassword()));
+        }
+
+        userService.addEditUser(user);
 
         return new ResponseEntity<>(
                 new Status(true, "User successfully edited!"),

@@ -58,16 +58,40 @@ function loadUsers() {
     });
 }
 
-function loadCategories() {
+function loadUser(userId) {
+    $.ajax({
+        type: "GET",
+        url: "/user/" + userId,
+        dataType: "json",
+        beforeSend: function (request) {
+            request.setRequestHeader("Authorization", token);
+        },
+        success: function (user) {
+
+            $('#firstNameEdit').val(user['firstName']);
+            $('#lastNameEdit').val(user['lastName']);
+            $('#usernameEdit').val(user['username']);
+
+            loadCategories('userCategoryEdit', user['categoryId']);
+            setupUserType('userTypeEdit', user['type']);
+        }
+    });
+}
+
+function loadCategories(userCategoryId, selectedValue) {
     $.ajax({
         type: "GET",
         url: "/category",
         dataType: "json",
         success: function (categories) {
-            $('#userCategory').append('<option value="">All</option>');
+            $('#' + userCategoryId).append('<option value="">All</option>');
             categories.forEach(function (category) {
-                $('#userCategory').append('<option value="' + category['id'] + '">' + category['name'] + '</option>');
+                $('#' + userCategoryId).append('<option value="' + category['id'] + '">' + category['name'] + '</option>');
             });
+
+            if (selectedValue){
+                $('option[value='+selectedValue+']').prop('selected',true);
+            }
         }
     });
 }
@@ -77,7 +101,7 @@ function generateTable(users) {
 
     users.forEach(function (user) {
         rows += '' +
-            '                <tr class="clickable-row" data-toggle="modal" data-target="#modalEditLanguage">' +
+            '                <tr class="clickable-row" data-toggle="modal" data-target="#modalEditUser">' +
             '                    <td class="filterable-cell">' + user['id'] + '</td>' +
             '                    <td class="filterable-cell">' + user['firstName'] + '</td>' +
             '                    <td class="filterable-cell">' + user['lastName'] + '</td>' +
@@ -104,6 +128,19 @@ function generateTable(users) {
         '        </table>';
 }
 
+function setupUserType(userType, selectedValue) {
+    $('#' + userType).append('<option value="administrator">Administrator</option>');
+    $('#' + userType).append('<option value="subscriber">Subscriber</option>');
+
+    if (selectedValue){
+        $('option[value='+selectedValue+']').prop('selected',true);
+    }
+}
+
+function refresh() {
+    $('#table').empty();
+    loadUsers();
+}
 
 $('body').on('click', 'span.glyphicon-user', function () {
     $.ajax({
@@ -125,14 +162,24 @@ $('body').on('click', 'span.glyphicon-user', function () {
 });
 
 $('body').on('click', 'button.my-float', function () {
-    $('#userType').append('<option value="administrator">Administrator</option>');
-    $('#userType').append('<option value="subscriber">Subscriber</option>');
-    loadCategories();
+    setupUserType('userType', null);
+    loadCategories('userCategory', null);
 });
 
 $('#modalAddUser').on('hidden.bs.modal', function () {
     $(this).find("input,select").val('').end();
     $(this).find('select').empty();
+});
+
+$('#modalEditUser').on('hidden.bs.modal', function () {
+    $(this).find("input,select").val('').end();
+    $(this).find('select').empty();
+});
+
+$('body').on('click', 'tr.clickable-row', function () {
+    var userId = $(this).children("td.filterable-cell").first().text();
+    $('#userId').val(userId);
+    loadUser(userId);
 });
 
 
@@ -233,6 +280,7 @@ $('#form-user-add').submit(function (e) {
         },
         success: function (response) {
             $('#modalAddUser').modal('toggle');
+            refresh();
             alert(response['message']);
         },
         error: function (err) {
@@ -240,5 +288,75 @@ $('#form-user-add').submit(function (e) {
             alert(json['message']);
         }
     });
+
+});
+
+$('#form-user-edit').submit(function (e) {
+    e.preventDefault();
+
+    var userId = $('#userId').val();
+    var firstname = $('#firstNameEdit').val();
+    var lastname = $('#lastNameEdit').val();
+    var password = $('#passwordEdit').val();
+    var categoryId = $('#userCategoryEdit').val();
+    var type = $('#userTypeEdit').val();
+
+    var data = {
+        'id': userId,
+        'firstName': firstname,
+        'lastName': lastname,
+        'categoryId': categoryId,
+        'type': type
+    };
+
+    if (password !== ""){
+        data['password'] = password;
+    }
+
+    $.ajax({
+        type: $(this).attr("method"),
+        url: $(this).attr("action"),
+        data: JSON.stringify(data),
+        contentType: "application/json",
+        beforeSend: function (request) {
+            request.setRequestHeader("Authorization", token);
+        },
+        success: function (response) {
+            $('#modalEditUser').modal('toggle');
+            refresh();
+            alert(response['message']);
+        },
+        error: function (err) {
+            var json = err.responseJSON;
+            alert(json['message']);
+        }
+    });
+
+});
+
+$('#delete_user').click(function () {
+    var userId = $('#userId').val();
+
+    if (confirm('Are you sure you want do delete this user?')) {
+        $.ajax({
+            type: 'DELETE',
+            url: '/user/' + userId,
+            contentType: "application/json",
+            beforeSend: function (request) {
+                request.setRequestHeader("Authorization", token);
+            },
+            success: function (response) {
+                $('#modalEditUser').modal('toggle');
+                refresh();
+                alert(response['message']);
+            },
+            error: function (err) {
+                var json = err.responseJSON;
+                alert(json['message']);
+            }
+        });
+    } else {
+        // Do nothing!
+    }
 
 });

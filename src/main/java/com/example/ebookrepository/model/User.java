@@ -31,7 +31,7 @@ public class User {
     @OneToMany(mappedBy = "user")
     private List<Ebook> ebooks = new ArrayList<>();
 
-    @ManyToOne(cascade = CascadeType.ALL)
+    @ManyToOne(cascade = CascadeType.REFRESH)
     @JoinColumn(name = "category_id")
     private Category category;
 
