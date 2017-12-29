@@ -22,6 +22,14 @@ public class EbookDto {
     public EbookDto() {
     }
 
+    public EbookDto(int id, String title, String author, int publicationYear, Category category){
+        this.id = id;
+        this.title = title;
+        this.author = author;
+        this.publicationYear = publicationYear;
+        this.category = category;
+    }
+
     public EbookDto(Ebook ebook) {
         this.id = ebook.getId();
         this.title = ebook.getTitle();

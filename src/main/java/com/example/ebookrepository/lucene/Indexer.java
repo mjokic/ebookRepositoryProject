@@ -3,6 +3,7 @@ package com.example.ebookrepository.lucene;
 
 import com.example.ebookrepository.lucene.analyzer.MyCustomAnalizer;
 import com.example.ebookrepository.model.Ebook;
+import com.google.gson.Gson;
 import org.apache.lucene.analysis.standard.StandardAnalyzer;
 import org.apache.lucene.document.Document;
 import org.apache.lucene.document.Field;
@@ -46,8 +47,12 @@ public class Indexer {
             document.add(new TextField("author", ebook.getAuthor(), Field.Store.YES));
             document.add(new TextField("content", content, Field.Store.YES));
             document.add(new TextField("keywords", ebook.getKeywords(), Field.Store.YES));
+            document.add(new TextField("publicationYear",
+                    String.valueOf(ebook.getPublicationYear()), Field.Store.YES));
             document.add(new TextField("languageId",
                     String.valueOf(ebook.getLanguage().getId()), Field.Store.YES));
+            document.add(new TextField("category",
+                    new Gson().toJson(ebook.getCategory()), Field.Store.YES));
 
             indexWriter.addDocument(document);
         }

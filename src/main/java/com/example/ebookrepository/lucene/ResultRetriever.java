@@ -1,7 +1,8 @@
 package com.example.ebookrepository.lucene;
 
-import com.example.ebookrepository.model.Ebook;
-import com.example.ebookrepository.service.EbookService;
+import com.example.ebookrepository.dto.EbookDto;
+import com.example.ebookrepository.model.Category;
+import com.google.gson.Gson;
 import org.apache.lucene.document.Document;
 import org.apache.lucene.index.DirectoryReader;
 import org.apache.lucene.search.IndexSearcher;
@@ -20,15 +21,13 @@ import static com.example.ebookrepository.lucene.Constants.luceneDir;
 public class ResultRetriever {
 
     private TopScoreDocCollector collector;
-    private final EbookService ebookService;
 
-    public ResultRetriever(EbookService ebookService) {
+    public ResultRetriever() {
         collector = TopScoreDocCollector.create(10);
-        this.ebookService = ebookService;
     }
 
-    public List<Ebook> printSearchResults(Query query) {
-        List<Ebook> ebooks = new ArrayList<>();
+    public List<EbookDto> printSearchResults(Query query) {
+        List<EbookDto> ebooks = new ArrayList<>();
 
         try {
             Directory fsDir = new SimpleFSDirectory(luceneDir);
@@ -37,12 +36,23 @@ public class ResultRetriever {
             is.search(query, collector);
 
             ScoreDoc[] hits = collector.topDocs().scoreDocs;
-            System.err.println("Found " + hits.length +
-                    " document(s) that matched query '" + query + "':");
+            System.err.println("Found " + hits.length + " document(s) that matched query '" + query + "':");
+
             for (int i = 0; i < collector.getTotalHits(); i++) {
                 int docId = hits[i].doc;
                 Document doc = is.doc(docId);
-                ebooks.add(ebookService.getEbookById(Integer.valueOf(doc.get("id"))));
+
+                Category category = new Gson().fromJson(doc.get("category"), Category.class);
+
+                EbookDto ebookDto = new EbookDto(
+                        Integer.parseInt(doc.get("id")),
+                        doc.get("title"),
+                        doc.get("author"),
+                        Integer.parseInt(doc.get("publicationYear")),
+                        category
+                );
+
+                ebooks.add(ebookDto);
             }
 
         } catch (IOException ioe) {
