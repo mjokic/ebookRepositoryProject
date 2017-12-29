@@ -1,6 +1,5 @@
 package com.example.ebookrepository.service;
 
-import com.example.ebookrepository.model.Category;
 import com.example.ebookrepository.model.Ebook;
 import com.example.ebookrepository.repository.EbookRepository;
 import org.springframework.beans.factory.annotation.Autowired;

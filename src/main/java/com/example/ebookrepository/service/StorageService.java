@@ -1,10 +1,13 @@
 package com.example.ebookrepository.service;
 
+import ch.qos.logback.core.rolling.helper.FileStoreUtil;
 import com.example.ebookrepository.model.Ebook;
 import com.example.ebookrepository.model.EbookDetails;
 import com.example.ebookrepository.model.Status;
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.pdmodel.PDDocumentInformation;
+import org.apache.tomcat.util.http.fileupload.FileUtils;
+import org.aspectj.util.FileUtil;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -23,6 +26,7 @@ import java.nio.file.Paths;
 public class StorageService {
 
     private static final String storagePath = "src/main/resources/files/";
+    private static final String storageTmpPath = "src/main/resources/files_tmp/";
 
 
     public StorageService() {
@@ -38,7 +42,7 @@ public class StorageService {
 
         try {
             String fileName = String.valueOf(System.currentTimeMillis());
-            File file = new File(storagePath + fileName + ".pdf");
+            File file = new File(storageTmpPath + fileName + ".pdf");
             FileOutputStream fileOutputStream = new FileOutputStream(file);
             fileOutputStream.write(multipartFile.getBytes());
             fileOutputStream.close();
@@ -52,6 +56,20 @@ public class StorageService {
                     HttpStatus.BAD_REQUEST);
         }
 
+    }
+
+    public void moveToStorage(Ebook ebook){
+        Path path = Paths.get(storageTmpPath + ebook.getFileName());
+
+        try {
+            byte[] bytes = Files.readAllBytes(path);
+            File output = new File(storagePath + ebook.getFileName());
+            FileOutputStream fileOutputStream = new FileOutputStream(output);
+            fileOutputStream.write(bytes);
+            fileOutputStream.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     public ResponseEntity<?> getFile(Ebook ebook) throws IOException {
@@ -79,5 +97,21 @@ public class StorageService {
         return new ResponseEntity<>(
                 new EbookDetails(file.getName(), author, title, keywords),
                 HttpStatus.OK);
+    }
+
+    public void delete(Ebook ebook){
+        try {
+            Files.deleteIfExists(new File(storagePath + ebook.getFileName()).toPath());
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void clean() {
+        try {
+            FileUtils.cleanDirectory(new File(storageTmpPath));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 }

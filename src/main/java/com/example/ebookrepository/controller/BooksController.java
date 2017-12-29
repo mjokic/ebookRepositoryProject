@@ -101,6 +101,7 @@ public class BooksController {
 
         ebookService.addEditEbook(ebook);
 
+        storageService.moveToStorage(ebook);
         Indexer.addFileToIndex(ebook);
 
         return new ResponseEntity<>(
@@ -134,9 +135,11 @@ public class BooksController {
 
     @DeleteMapping("/{id}")
     public ResponseEntity<?> deleteEbook(@PathVariable("id") int id) throws IOException {
+        Ebook ebook = ebookService.getEbookById(id);
         ebookService.deleteEbook(id);
         // when deleting a book remove it from lucene index
         Indexer.deleteFileFromIndex(id);
+        storageService.delete(ebook);
 
         return new ResponseEntity<>(
                 new Status(true, "Ebook delete successfully!"),
